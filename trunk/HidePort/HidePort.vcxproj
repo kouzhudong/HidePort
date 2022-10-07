@@ -139,11 +139,17 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attach.h" />
     <ClInclude Include="DriverEntry.h" />
+    <ClInclude Include="MajorFunction.h" />
+    <ClInclude Include="Nsi.h" />
     <ClInclude Include="Pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Attach.cpp" />
     <ClCompile Include="DriverEntry.cpp" />
+    <ClCompile Include="MajorFunction.cpp" />
+    <ClCompile Include="Nsi.cpp" />
     <ClCompile Include="Pch.cpp" />
   </ItemGroup>
   <ItemGroup>

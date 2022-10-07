@@ -1,4 +1,9 @@
 #include "DriverEntry.h"
+#include "Attach.h"
+#include "MajorFunction.h"
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 _Function_class_(DRIVER_UNLOAD)
@@ -10,7 +15,7 @@ VOID Unload(_In_ struct _DRIVER_OBJECT * DriverObject)
 
     PAGED_CODE();
 
-
+    Detach(DriverObject);
 }
 
 
@@ -38,7 +43,13 @@ EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_ST
 
     DriverObject->DriverUnload = Unload;
 
+    for (int i = 0; i <= IRP_MJ_MAXIMUM_FUNCTION; i++) {
+        DriverObject->MajorFunction[i] = GlobalMajorFunction;
+    }
 
+    //DriverObject->FastIoDispatch = &g_FastIoDispatch;
+
+    Status = AttachDevice(DriverObject, L"\\Device\\Nsi", L"\\Device\\MyNsi", MY_NSI_DEVICE_TAG);
 
     return Status;
 }
