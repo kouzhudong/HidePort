@@ -62,6 +62,13 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
     DBG_UNREFERENCED_LOCAL_VARIABLE(Type3InputBuffer);
 
     Status = DefaultMajorFunction(DeviceObject, Irp);
+    if (!NT_SUCCESS(Status)) { 
+        return Status;
+    }
+
+
+
+
 
     return Status;
 }
