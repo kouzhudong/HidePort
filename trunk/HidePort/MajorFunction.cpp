@@ -54,10 +54,7 @@ NTSTATUS GlobalMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ 
     }
 
     //阻断响应处理。
-    if (STATUS_ACCESS_DENIED == Status) {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: IrpName: %s Denied",
-                FltGetIrpName(IrpStack->MajorFunction));
-        //Status = STATUS_ACCESS_DENIED;
+    if (STATUS_ACCESS_DENIED == Status) {        
         Irp->IoStatus.Status = Status;
         Irp->IoStatus.Information = 0;
         IoCompleteRequest(Irp, IO_NO_INCREMENT);
@@ -72,8 +69,7 @@ NTSTATUS GlobalMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ 
     }
     Status = IoCallDriver(DevExt->AttachedDevice, Irp);
     if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x", 
-                FltGetIrpName(IrpStack->MajorFunction), Status);
+        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: Status:%#x", Status);
     }
 
     return Status;
