@@ -47,27 +47,22 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
     PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
     PVOID Type3InputBuffer = IrpStack->Parameters.DeviceIoControl.Type3InputBuffer;
     KPROCESSOR_MODE RequestorMode = Irp->RequestorMode;
-    PCHAR               inBuf, outBuf; // pointer to Input and output buffer
-    ULONG               InputBufferLength; // Input buffer length
-    ULONG               outBufLength; // Output buffer length
+    ULONG InputBufferLength = IrpStack->Parameters.DeviceIoControl.InputBufferLength;  
+    ULONG outBufLength = IrpStack->Parameters.DeviceIoControl.OutputBufferLength;  
 
-    inBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
-    outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
-
-    InputBufferLength = IrpStack->Parameters.DeviceIoControl.InputBufferLength;
-    outBufLength = IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
-
-    DBG_UNREFERENCED_LOCAL_VARIABLE(inBuf);
-    DBG_UNREFERENCED_LOCAL_VARIABLE(outBuf);
     DBG_UNREFERENCED_LOCAL_VARIABLE(InputBufferLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
     DBG_UNREFERENCED_LOCAL_VARIABLE(Type3InputBuffer);
 
     Status = DefaultMajorFunction(DeviceObject, Irp);
-    if (!NT_SUCCESS(Status)) { 
-        return Status;
+    if (!NT_SUCCESS(Status)) {
+        return Status;//大多是STATUS_MORE_ENTRIES，而不是挂起状态：STATUS_PENDING。
     }
+
+    //if (STATUS_SUCCESS != Status) {
+    //    return Status;
+    //}
 
 
 
