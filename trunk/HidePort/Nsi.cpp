@@ -41,6 +41,8 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
 重点：InputBuffer的结构类型。
 
 篡改时机：IoCallDriver之后。
+
+参考：https://github.com/claudiouzelac/rootkit.com/blob/c8869de5a947273c9c151b44aa39643a7fea531c/cardmagic/PortHidDemo_Vista.c
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;

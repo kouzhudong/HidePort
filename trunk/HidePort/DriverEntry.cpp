@@ -16,6 +16,8 @@ VOID Unload(_In_ struct _DRIVER_OBJECT * DriverObject)
     PAGED_CODE();
 
     Detach(DriverObject);
+
+    Sleep(9999);//等待一些挂起状态的IRP。注意：不是全部。
 }
 
 

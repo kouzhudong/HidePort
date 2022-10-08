@@ -143,6 +143,13 @@ typedef unsigned short  u_short;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+_IRQL_requires_min_(PASSIVE_LEVEL)
+_IRQL_requires_max_(APC_LEVEL)
+_IRQL_requires_same_
+_Success_(return == STATUS_SUCCESS)
+NTSTATUS Sleep(_In_ UINT32 numMS);
+
+
 class Pch
 {
 
