@@ -2,6 +2,7 @@
 
 #include "Pch.h"
 #include "Attach.h"
+#include "Nsi.h"
 
 _Function_class_(DRIVER_DISPATCH)
 _IRQL_requires_max_(DISPATCH_LEVEL)

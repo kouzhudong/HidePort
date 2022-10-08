@@ -4,31 +4,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-NTSTATUS NsiMajorFunction(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
-/*
-
-注意：返回STATUS_ACCESS_DENIED表示阻断这个操作。
-*/
-{
-    NTSTATUS Status = STATUS_SUCCESS;
-
-    UNREFERENCED_PARAMETER(Irp);
-
-    switch (IrpStack->MajorFunction) {
-    case IRP_MJ_CREATE: //估计这里全是打开的操作.
-
-        break;
-
-    default:
-        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
-        //        IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
-        break;
-    }
-
-    return Status;
-}
-
-
 _Function_class_(DRIVER_DISPATCH)
 _IRQL_requires_max_(DISPATCH_LEVEL)
 _IRQL_requires_same_
