@@ -8,16 +8,19 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 {
     PDEVICE_EXTENSION DevExt = (PDEVICE_EXTENSION)DeviceObject->DeviceExtension;
     NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
+    UCHAR MajorFunction = IrpStack->MajorFunction;
 
-    //放过继续。
     if (Irp->CurrentLocation <= 1) {
         IoSkipCurrentIrpStackLocation(Irp);
     } else {
         IoCopyCurrentIrpStackLocationToNext(Irp);
     }
-    Status = IoCallDriver(DevExt->AttachedDevice, Irp);
+
+    Status = IoCallDriver(DevExt->AttachedDevice, Irp);//这个函数之后禁止访问IrpStack等信息。
     if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
-        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: Status:%#x", Status);
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x", 
+                FltGetIrpName(MajorFunction), Status);
     }
 
     return Status;
