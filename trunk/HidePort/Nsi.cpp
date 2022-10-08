@@ -4,11 +4,32 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-NTSTATUS MyNsippEnumerateObjectsAllParameters(PVOID InputBuffer,
-                                              SIZE_T Length,
-                                              KPROCESSOR_MODE RequestorMode,
-                                              PULONG_PTR Information
-)
+NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
+{
+    PDEVICE_EXTENSION DevExt = (PDEVICE_EXTENSION)DeviceObject->DeviceExtension;
+    NTSTATUS Status = STATUS_SUCCESS;
+
+    //放过继续。
+    if (Irp->CurrentLocation <= 1) {
+        IoSkipCurrentIrpStackLocation(Irp);
+    } else {
+        IoCopyCurrentIrpStackLocationToNext(Irp);
+    }
+    Status = IoCallDriver(DevExt->AttachedDevice, Irp);
+    if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
+        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: Status:%#x", Status);
+    }
+
+    return Status;
+}
+
+
+NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
+//NTSTATUS MyNsippEnumerateObjectsAllParameters(PVOID InputBuffer,
+//                                              SIZE_T Length,
+//                                              KPROCESSOR_MODE RequestorMode,
+//                                              PULONG_PTR Information
+//)
 /*
 功能：隐藏端口。
 
@@ -20,17 +41,33 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(PVOID InputBuffer,
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
+    PVOID Type3InputBuffer = IrpStack->Parameters.DeviceIoControl.Type3InputBuffer;
+    KPROCESSOR_MODE RequestorMode = Irp->RequestorMode;
+    PCHAR               inBuf, outBuf; // pointer to Input and output buffer
+    ULONG               InputBufferLength; // Input buffer length
+    ULONG               outBufLength; // Output buffer length
 
-    UNREFERENCED_PARAMETER(InputBuffer);
-    UNREFERENCED_PARAMETER(Length);
-    UNREFERENCED_PARAMETER(RequestorMode);
-    UNREFERENCED_PARAMETER(Information);
+    inBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
+    outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
+
+    InputBufferLength = IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+    outBufLength = IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
+
+    DBG_UNREFERENCED_LOCAL_VARIABLE(inBuf);
+    DBG_UNREFERENCED_LOCAL_VARIABLE(outBuf);
+    DBG_UNREFERENCED_LOCAL_VARIABLE(InputBufferLength);
+    DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
+    DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
+    DBG_UNREFERENCED_LOCAL_VARIABLE(Type3InputBuffer);
+
+    Status = DefaultMajorFunction(DeviceObject, Irp);
 
     return Status;
 }
 
 
-NTSTATUS NsiDeviceControl(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
+NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject , _Inout_ PIRP Irp)
 /*
 做法参考：nsiproxy!NsippDispatch.
 
@@ -38,66 +75,55 @@ NTSTATUS NsiDeviceControl(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
-    PIO_STACK_LOCATION  irpSp;// Pointer to current stack location
-    ULONG               InputBufferLength; // Input buffer length
-    ULONG               outBufLength; // Output buffer length
-    PCHAR               inBuf, outBuf; // pointer to Input and output buffer
-
-    UNREFERENCED_PARAMETER(IrpStack);
-
-    irpSp = IoGetCurrentIrpStackLocation(Irp);
-    InputBufferLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;
-    outBufLength = irpSp->Parameters.DeviceIoControl.OutputBufferLength;
-    PVOID Type3InputBuffer = irpSp->Parameters.DeviceIoControl.Type3InputBuffer;
-    ULONG IoControlCode = irpSp->Parameters.DeviceIoControl.IoControlCode;
-    inBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
-    outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
-    KPROCESSOR_MODE RequestorMode = Irp->RequestorMode;
+    PIO_STACK_LOCATION  IrpStack = IoGetCurrentIrpStackLocation(Irp);// Pointer to current stack location   
+    ULONG IoControlCode = IrpStack->Parameters.DeviceIoControl.IoControlCode;  
 
     switch (IoControlCode) {
     case 0x12001Bu://NsippEnumerateObjectsAllParameters
-        MyNsippEnumerateObjectsAllParameters(Type3InputBuffer,
-                                             (SIZE_T)InputBufferLength,
-                                             RequestorMode,
-                                             &Irp->IoStatus.Information);
+        //MyNsippEnumerateObjectsAllParameters(Type3InputBuffer,
+        //                                     (SIZE_T)InputBufferLength,
+        //                                     RequestorMode,
+        //                                     &Irp->IoStatus.Information);
+        Status = MyNsippEnumerateObjectsAllParameters(DeviceObject, Irp);
         break;
     case 0x120007u://NsippGetParameter
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12000Fu://NsippGetAllParameters
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12000Bu://NsippSetParameter
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x120013u://NsippSetAllParameters
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12001Fu://NsippIsCallerNsiService + NsippRegisterChangeNotification
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x120023u://NsippIsCallerNsiService + NsippDeregisterChangeNotification
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12003Fu://NsippRequestChangeNotification
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x120040u://NsippCancelChangeNotification
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x120047u://NsippEnumerateObjectsAllPersistentParametersWithMask
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12004Bu://NsippGetAllPersistentParametersWithMask
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case 0x12004Fu://NsippSetAllPersistentParametersWithMask
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     default:
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL,
                 "Warning: MajorFunction: %d, IrpName: %s, IoControlCode:%d", 
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction), IoControlCode);
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     }
 
@@ -105,36 +131,43 @@ NTSTATUS NsiDeviceControl(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
 }
 
 
-NTSTATUS NsiMajorFunction(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
+NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
 做法参考：nsiproxy!NsippDispatch.
 */
 {
+    PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
     NTSTATUS Status = STATUS_SUCCESS;
-
-    UNREFERENCED_PARAMETER(Irp);
 
     switch (IrpStack->MajorFunction) {
     case IRP_MJ_CREATE:
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case IRP_MJ_DEVICE_CONTROL:
-        Status = NsiDeviceControl(IrpStack, Irp);
+        Status = NsiDeviceControl(DeviceObject, Irp);
         break;
     case IRP_MJ_INTERNAL_DEVICE_CONTROL:
-        Status = NsiDeviceControl(IrpStack, Irp);
+        Status = NsiDeviceControl(DeviceObject, Irp);
         break;
     case IRP_MJ_CLEANUP:
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     case IRP_MJ_CLOSE:
-
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     default:
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
+        Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     }
+
+    //if (STATUS_ACCESS_DENIED == Status) {//阻断响应处理。        
+    //    Irp->IoStatus.Status = Status;
+    //    Irp->IoStatus.Information = 0;
+    //    IoCompleteRequest(Irp, IO_NO_INCREMENT);
+    //    return Status;
+    //}
 
     return Status;
 }
