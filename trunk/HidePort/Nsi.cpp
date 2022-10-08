@@ -7,6 +7,8 @@
 NTSTATUS NsiDeviceControl(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
 /*
 做法参考：nsiproxy!NsippDispatch.
+
+还有个函数叫：NsippDispatchDeviceControl。
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
@@ -63,8 +65,9 @@ NTSTATUS NsiDeviceControl(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
 
         break;
     default:
-        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
-        //        IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL,
+                "Warning: MajorFunction: %d, IrpName: %s, IoControlCode:%d", 
+                IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction), IoControlCode);
         break;
     }
 
@@ -98,8 +101,8 @@ NTSTATUS NsiMajorFunction(_In_ PIO_STACK_LOCATION IrpStack, _Inout_ PIRP Irp)
 
         break;
     default:
-        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
-        //        IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
+                IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
         break;
     }
 
