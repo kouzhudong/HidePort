@@ -54,7 +54,7 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 }
 
 
-void EnumTcp(_In_ PNsiParameters70 NsiParam)
+void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 {
     if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
     //ASSERT(NsiParam->size1 == 0x38);//可以肯定这个结构的大小是0x38。
@@ -70,7 +70,7 @@ void EnumTcp(_In_ PNsiParameters70 NsiParam)
     等。
     */
 
-        PTcpTable Table = (PTcpTable)NsiParam->p1;
+        PTcpTable Table = NsiParam->p1;
 
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "dwNumEntries: %d", NsiParam->Counter);
 
@@ -174,7 +174,7 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
         PNsiParameters70 NsiParam = (PNsiParameters70)Type3InputBuffer;
         PNPI_MODULEID ModuleId = NsiParam->ModuleId;
         if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
-            EnumTcp(NsiParam);
+            EnumTcpTable(NsiParam);
         }
     } __except (EXCEPTION_EXECUTE_HANDLER) {
         Print(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "ExceptionCode:%#X", GetExceptionCode());
