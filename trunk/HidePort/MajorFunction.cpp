@@ -48,7 +48,7 @@ NTSTATUS GlobalMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ 
         return ControlDeviceObjectMajorFunction(DeviceObject, Irp);//直接返回，不能走下面。
         break;
     default:
-        ASSERTMSG("非法的设备操作", FALSE);
+        ASSERTMSG((PSTR)"非法的设备操作", FALSE);
         break;
     }
     

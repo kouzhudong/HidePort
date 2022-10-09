@@ -1,6 +1,33 @@
 #include "Nsi.h"
 
 
+//http://safe.sh/security/?type=detail&id=1381
+NPI_MODULEID NPI_MS_TCP_MODULEID = {
+    sizeof(NPI_MODULEID),
+    MIT_GUID,
+    {0xEB004A03, 0x9B1A, 0x11D4,
+    {0x91, 0x23, 0x00, 0x50, 0x04, 0x77, 0x59, 0xBC}}
+};
+
+
+//http://safe.sh/security/?type=detail&id=1381
+NPI_MODULEID NPI_MS_UDP_MODULEID = {
+    sizeof(NPI_MODULEID),
+    MIT_GUID,
+    {0xEB004A02, 0x9B1A, 0x11D4,
+    {0x91, 0x23, 0x00, 0x50, 0x04, 0x77, 0x59, 0xBC}}
+};
+
+
+//http://safe.sh/security/?type=detail&id=1381
+NPI_MODULEID NPI_MS_RAW_MODULEID = {
+    sizeof(NPI_MODULEID),
+    MIT_GUID,
+    {0xEB004A07, 0x9B1A, 0x11D4,
+    {0x91, 0x23, 0x00, 0x50, 0x04, 0x77, 0x59, 0xBC}}
+};
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -42,6 +69,8 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
 
 篡改时机：IoCallDriver之后。
 
+InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
+
 参考：https://github.com/claudiouzelac/rootkit.com/blob/c8869de5a947273c9c151b44aa39643a7fea531c/cardmagic/PortHidDemo_Vista.c
 */
 {
@@ -55,7 +84,6 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
     DBG_UNREFERENCED_LOCAL_VARIABLE(InputBufferLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
-    DBG_UNREFERENCED_LOCAL_VARIABLE(Type3InputBuffer);
 
     Status = DefaultMajorFunction(DeviceObject, Irp);
     if (!NT_SUCCESS(Status)) {
@@ -66,9 +94,72 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
     //    return Status;
     //}
 
+    __try { 
+        PNsiParameters70 NsiParam = (PNsiParameters70)Type3InputBuffer;
+        PNPI_MODULEID ModuleId = NsiParam->ModuleId;
+        if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
+            if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
+                //ASSERT(NsiParam->size1 == 0x38);//可以肯定这个结构的大小是0x38。
 
+                /*
+                这个结构里包含：
+                LocalAddr
+                dwLocalScopeId
+                dwLocalPort
+                RemoteAddr
+                dwRemoteScopeId
+                dwRemotePort
+                等。
+                */
 
+                PTcpTable Table = (PTcpTable)NsiParam->p1;
+                switch (Table->Family) {
+                case AF_INET:
+                {
 
+                    break;
+                }
+                case AF_INET6:
+                {
+
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+
+            if (NsiParam->p2) {//这个是啥结构呢？可以分析GetTcp6Table2。
+                /*
+                经测试，这个结构的大小是0x10.
+                */
+
+            }
+
+            if (NsiParam->p3) {//这个是啥结构呢？可以分析GetTcp6Table2。
+                /*
+                经测试，这个结构的大小是0x20.
+
+                这个结构里包含：
+                State
+                dwOffloadState
+
+                */
+
+            }
+
+            if (NsiParam->p4) {//这个是啥结构呢？可以分析GetTcp6Table2。
+                /*
+                这个结构里包含：
+                dwOwningPid
+
+                */
+
+            }
+        }
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        Print(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "ExceptionCode:%#X", GetExceptionCode());
+    }
 
     return Status;
 }
