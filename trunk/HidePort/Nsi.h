@@ -35,17 +35,17 @@ typedef struct _NsiParameters70
     SIZE_T field_18;
     SIZE_T Flag;
 
-    PTcpTable p1;
-    SIZE_T size1;
+    PVOID p1;
+    SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
 
     PVOID p2;
-    SIZE_T size2;
+    SIZE_T size2;//不是内存的大小，应该是数组的元素的大小。
 
     PVOID p3;
-    SIZE_T size3;
+    SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
 
     PVOID p4;
-    ULONG size4;
+    ULONG size4;//不是内存的大小，应该是数组的元素的大小。
 
     ULONG field_64;
     ULONG Counter;
