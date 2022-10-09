@@ -35,8 +35,8 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 {
     PDEVICE_EXTENSION DevExt = (PDEVICE_EXTENSION)DeviceObject->DeviceExtension;
     NTSTATUS Status = STATUS_SUCCESS;
-    PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
-    UCHAR MajorFunction = IrpStack->MajorFunction;
+    //PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
+    //UCHAR MajorFunction = IrpStack->MajorFunction;
 
     if (Irp->CurrentLocation <= 1) {
         IoSkipCurrentIrpStackLocation(Irp);
@@ -46,8 +46,8 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 
     Status = IoCallDriver(DevExt->AttachedDevice, Irp);//这个函数之后禁止访问IrpStack等信息。
     if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x", 
-                FltGetIrpName(MajorFunction), Status);
+        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x",
+        //        FltGetIrpName(MajorFunction), Status);
     }
 
     return Status;
@@ -78,8 +78,8 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
     PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
     PVOID Type3InputBuffer = IrpStack->Parameters.DeviceIoControl.Type3InputBuffer;
     KPROCESSOR_MODE RequestorMode = Irp->RequestorMode;
-    ULONG InputBufferLength = IrpStack->Parameters.DeviceIoControl.InputBufferLength;  
-    ULONG outBufLength = IrpStack->Parameters.DeviceIoControl.OutputBufferLength;  
+    ULONG InputBufferLength = IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+    ULONG outBufLength = IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 
     DBG_UNREFERENCED_LOCAL_VARIABLE(InputBufferLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
@@ -94,7 +94,7 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
     //    return Status;
     //}
 
-    __try { 
+    __try {
         PNsiParameters70 NsiParam = (PNsiParameters70)Type3InputBuffer;
         PNPI_MODULEID ModuleId = NsiParam->ModuleId;
         if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
@@ -113,32 +113,41 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
                 */
 
                 PTcpTable Table = (PTcpTable)NsiParam->p1;
-                switch (Table->Family) {
-                case AF_INET:
-                {
 
-                    break;
-                }
-                case AF_INET6:
-                {
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "dwNumEntries: %d", NsiParam->Counter);
 
-                    break;
-                }
-                default:
-                    break;
-                }
+                for (ULONG i = 0; i < NsiParam->Counter; i++, Table++) {
+                    switch (Table->LocalFamily) {
+                    case AF_INET:
+                    {
+                        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
+                                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+                        break;
+                    }
+                    case AF_INET6:
+                    {
+                        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
+                                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+                        break;
+                    }
+                    default:
+                        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+                        break;
+                    }
+                }                
             }
 
             if (NsiParam->p2) {//这个是啥结构呢？可以分析GetTcp6Table2。
                 /*
-                经测试，这个结构的大小是0x10.
+                这个结构的指针大多为NULL。
                 */
 
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", NsiParam->size2);
             }
 
             if (NsiParam->p3) {//这个是啥结构呢？可以分析GetTcp6Table2。
                 /*
-                经测试，这个结构的大小是0x20.
+                经测试，这个结构的大小是0x10.
 
                 这个结构里包含：
                 State
@@ -146,15 +155,19 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
 
                 */
 
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", NsiParam->size3);
             }
 
             if (NsiParam->p4) {//这个是啥结构呢？可以分析GetTcp6Table2。
                 /*
+                经测试，这个结构的大小是0x20.
+
                 这个结构里包含：
                 dwOwningPid
 
                 */
 
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", NsiParam->size4);
             }
         }
     } __except (EXCEPTION_EXECUTE_HANDLER) {
@@ -165,7 +178,7 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
 }
 
 
-NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject , _Inout_ PIRP Irp)
+NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
 做法参考：nsiproxy!NsippDispatch.
 
@@ -174,7 +187,7 @@ NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject , _Inout_ PI
 {
     NTSTATUS Status = STATUS_SUCCESS;
     PIO_STACK_LOCATION  IrpStack = IoGetCurrentIrpStackLocation(Irp);// Pointer to current stack location   
-    ULONG IoControlCode = IrpStack->Parameters.DeviceIoControl.IoControlCode;  
+    ULONG IoControlCode = IrpStack->Parameters.DeviceIoControl.IoControlCode;
 
     switch (IoControlCode) {
     case 0x12001Bu://NsippEnumerateObjectsAllParameters
@@ -219,7 +232,7 @@ NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject , _Inout_ PI
         break;
     default:
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL,
-                "Warning: MajorFunction: %d, IrpName: %s, IoControlCode:%d", 
+                "Warning: MajorFunction: %d, IrpName: %s, IoControlCode:%d",
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction), IoControlCode);
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
@@ -254,7 +267,7 @@ NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s", 
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;

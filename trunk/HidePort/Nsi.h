@@ -37,19 +37,19 @@ static_assert(sizeof(NsiParameters70) == 0x70); //语言功能 "简要静态断言" 需要编
 typedef struct _TcpTable
 {
     //这四个成员应该是SOCKADDR。
-    WORD Family;
-    WORD dwLocalPort;
+    WORD LocalFamily;
+    WORD LocalPort;
     IN_ADDR LocalAddrV4;
     IN6_ADDR LocalAddrV6;
 
-    DWORD dwLocalScopeId;
+    DWORD LocalScopeId;
 
-    WORD field_1C;//这个估计是RemoteFamily
-    WORD dwRemotePort;
+    WORD RemoteFamily;//这个是猜测的，经观察和LocalFamily一样。
+    WORD RemotePort;
     IN_ADDR RemoteAddrV4;
     IN6_ADDR RemoteAddrV6;
 
-    int dwRemoteScopeId;
+    DWORD RemoteScopeId;
 }TcpTable, * PTcpTable;
 
 static_assert(sizeof(TcpTable) == 0x38);
