@@ -119,25 +119,33 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
 
 void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 {
-    if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
-    //ASSERT(NsiParam->size1 == 0x38);//可以肯定这个结构的大小是0x38。
+    if (nullptr == NsiParam) {
+        return;
+    }
 
-    /*
-    这个结构里包含：
-    LocalAddr
-    dwLocalScopeId
-    dwLocalPort
-    RemoteAddr
-    dwRemoteScopeId
-    dwRemotePort
-    等。
-    */
+    if (0 == NsiParam->Counter) {
+        return;
+    }
 
-        PTcpTable Table = (PTcpTable)NsiParam->p1;
+    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
+    PTcpTable Table = (PTcpTable)NsiParam->p1;
 
-        for (ULONG i = 0; i < NsiParam->Counter; i++, Table++) {
+    for (ULONG i = 0; i < NsiParam->Counter; i++, Table++) {
+        if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
+            //ASSERT(NsiParam->size1 == 0x38);//可以肯定这个结构的大小是0x38。
+
+            /*
+            这个结构里包含：
+            LocalAddr
+            dwLocalScopeId
+            dwLocalPort
+            RemoteAddr
+            dwRemoteScopeId
+            dwRemotePort
+            等。
+            */
+
             switch (Table->LocalFamily) {
             case AF_INET:
             {
@@ -156,7 +164,19 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
                 break;
             }
         }
-    }
+
+        if (NsiParam->p2) {
+
+        }
+
+        if (NsiParam->p3) {
+
+        }
+
+        if (NsiParam->p4) {
+
+        }
+    }   
 
     if (NsiParam->p2) {//这个是啥结构呢？可以分析GetTcp6Table2。
         /*
