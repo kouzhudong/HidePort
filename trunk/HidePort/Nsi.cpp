@@ -32,6 +32,64 @@ NPI_MODULEID NPI_MS_RAW_MODULEID = {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+void DumpTcpEntry(_In_ PTcpTable Table)
+/*
+这个结构里包含：
+LocalAddr
+dwLocalScopeId
+dwLocalPort
+RemoteAddr
+dwRemoteScopeId
+dwRemotePort
+等。
+*/
+{
+    switch (Table->LocalFamily) {
+    case AF_INET:
+    {
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
+                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+        break;
+    }
+    case AF_INET6:
+    {
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
+                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+        break;
+    }
+    default:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+        break;
+    }
+
+
+
+}
+
+
+void DumpUdpEntry(_In_ PUdpTable Table)
+{
+    switch (Table->LocalFamily) {
+    case AF_INET:
+    {
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+        break;
+    }
+    case AF_INET6:
+    {
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+        break;
+    }
+    default:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+        break;
+    }
+
+
+
+}
+
+
 NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 {
     PDEVICE_EXTENSION DevExt = (PDEVICE_EXTENSION)DeviceObject->DeviceExtension;
@@ -71,21 +129,7 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
         if (NsiParam->p1) {
-            switch (Table->LocalFamily) {
-            case AF_INET:
-            {
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
-                break;
-            }
-            case AF_INET6:
-            {
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
-                break;
-            }
-            default:
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
-                break;
-            }
+            DumpUdpEntry(Table);
 
             Table++;
         }
@@ -131,38 +175,11 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 
     PTcpTable Table = (PTcpTable)NsiParam->p1;
 
-    for (ULONG i = 0; i < NsiParam->Counter; i++, Table++) {
+    for (ULONG i = 0; i < NsiParam->Counter; i++) {
         if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
             //ASSERT(NsiParam->size1 == 0x38);//可以肯定这个结构的大小是0x38。
-
-            /*
-            这个结构里包含：
-            LocalAddr
-            dwLocalScopeId
-            dwLocalPort
-            RemoteAddr
-            dwRemoteScopeId
-            dwRemotePort
-            等。
-            */
-
-            switch (Table->LocalFamily) {
-            case AF_INET:
-            {
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
-                        RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
-                break;
-            }
-            case AF_INET6:
-            {
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
-                        RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
-                break;
-            }
-            default:
-                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
-                break;
-            }
+            DumpTcpEntry(Table);
+            Table++;
         }
 
         if (NsiParam->p2) {
