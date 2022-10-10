@@ -32,6 +32,91 @@ NPI_MODULEID NPI_MS_RAW_MODULEID = {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+void DumpModuleInfo(_In_ PProcessTable Entry)
+{
+    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OwningPid: %d", Entry->dwOwningPid);
+
+
+
+}
+
+
+void DumpStateInfo(_In_ PStateTable Entry)
+/*
+
+https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rrasm/882bec9c-2fb6-4acd-a9b6-dabcab1ac0d6
+https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ns-tcpmib-mib_tcprow2
+https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ns-tcpmib-mib_tcp6row
+*/
+{
+    switch (Entry->State) {
+    case MIB_TCP_STATE_CLOSED:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closed");
+        break;
+    case MIB_TCP_STATE_LISTEN:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the listen state");
+        break;
+    case MIB_TCP_STATE_SYN_SENT:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been sent");
+        break;
+    case MIB_TCP_STATE_SYN_RCVD:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been received");
+        break;
+    case MIB_TCP_STATE_ESTAB:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection has been established");
+        break;
+    case MIB_TCP_STATE_FIN_WAIT1:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
+        break;
+    case MIB_TCP_STATE_FIN_WAIT2:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
+        break;
+    case MIB_TCP_STATE_CLOSE_WAIT:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the close wait state");
+        break;
+    case MIB_TCP_STATE_CLOSING:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closing");
+        break;
+    case MIB_TCP_STATE_LAST_ACK:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the last ACK state");
+        break;
+    case MIB_TCP_STATE_TIME_WAIT:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the time wait state");
+        break;
+    case MIB_TCP_STATE_DELETE_TCB:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the delete TCB state");
+        break;
+    default:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %d", Entry->State);
+        break;
+    }
+
+    //https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ne-tcpmib-tcp_connection_offload_state
+    switch (Entry->dwOffloadState) {
+    case TcpConnectionOffloadStateInHost:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "InHost");
+        break;
+    case TcpConnectionOffloadStateOffloading:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloading");
+        break;
+    case TcpConnectionOffloadStateOffloaded:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloaded");
+        break;
+    case TcpConnectionOffloadStateUploading:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Uploading");
+        break;
+    case TcpConnectionOffloadStateMax:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Max");
+        break;
+    default:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %d", Entry->dwOffloadState);
+        break;
+    }
+
+    //ASSERT(Entry->dwOffloadState < TcpConnectionOffloadStateMax);
+}
+
+
 void DumpTcpEntry(_In_ PTcpTable Table)
 /*
 这个结构里包含：
@@ -163,11 +248,12 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
     PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Udp dwNumEntries: %d", NsiParam->Counter);
 
     PUdpTable Table = (PUdpTable)NsiParam->p1;
+    PStateTable State = (PStateTable)NsiParam->StateInfo;
+    PProcessTable Module = (PProcessTable)NsiParam->ProcessInfo;
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
         if (NsiParam->p1) {
             DumpUdpEntry(Table);
-
             Table++;
         }
 
@@ -176,11 +262,13 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
         }
 
         if (NsiParam->StateInfo) {
-            
+            //DumpStateInfo(State);
+            State++;
         }
 
         if (NsiParam->ProcessInfo) {
-            
+            DumpModuleInfo(Module);
+            Module++;
         }
     }
 
@@ -211,6 +299,8 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
     PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
 
     PTcpTable Table = (PTcpTable)NsiParam->p1;
+    PStateTable State = (PStateTable)NsiParam->StateInfo;
+    PProcessTable Module = (PProcessTable)NsiParam->ProcessInfo;
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
         if (NsiParam->p1) {//这个是啥结构呢？可以分析GetTcp6Table2。
@@ -224,11 +314,13 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
         }
 
         if (NsiParam->StateInfo) {
-
+            DumpStateInfo(State);
+            State++;
         }
 
         if (NsiParam->ProcessInfo) {
-
+            DumpModuleInfo(Module);
+            Module++;
         }
     }   
 
