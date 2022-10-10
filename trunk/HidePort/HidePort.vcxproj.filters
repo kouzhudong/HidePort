@@ -39,6 +39,12 @@
     <ClInclude Include="Nsi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Cdo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DriverEntry.cpp">
@@ -54,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Nsi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cdo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

