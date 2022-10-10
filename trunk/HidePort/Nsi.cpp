@@ -57,8 +57,51 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 
 void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
 {
-    UNREFERENCED_PARAMETER(NsiParam);
+    if (nullptr == NsiParam) {
+        return;
+    }
 
+    if (0 == NsiParam->Counter) {
+        return;
+    }
+
+    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Udp dwNumEntries: %d", NsiParam->Counter);
+
+    PUdpTable Table = (PUdpTable)NsiParam->p1;
+
+    for (ULONG i = 0; i < NsiParam->Counter; i++) {
+        if (NsiParam->p1) {
+            switch (Table->LocalFamily) {
+            case AF_INET:
+            {
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+                break;
+            }
+            case AF_INET6:
+            {
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+                break;
+            }
+            default:
+                PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+                break;
+            }
+
+            Table++;
+        }
+
+        if (NsiParam->p2) {
+            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
+        }
+
+        if (NsiParam->p3) {
+            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
+        }
+
+        if (NsiParam->p4) {
+            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
+        }
+    }
 }
 
 
@@ -80,7 +123,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 
         PTcpTable Table = (PTcpTable)NsiParam->p1;
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "dwNumEntries: %d", NsiParam->Counter);
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
 
         for (ULONG i = 0; i < NsiParam->Counter; i++, Table++) {
             switch (Table->LocalFamily) {
@@ -108,7 +151,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
         这个结构的指针大多为NULL。
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", NsiParam->size2);
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
     if (NsiParam->p3) {//这个是啥结构呢？可以分析GetTcp6Table2。
@@ -121,7 +164,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", NsiParam->size3);
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
     if (NsiParam->p4) {//这个是啥结构呢？可以分析GetTcp6Table2。
@@ -133,7 +176,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", NsiParam->size4);
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
     }
 }
 
