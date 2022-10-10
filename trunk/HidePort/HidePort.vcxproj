@@ -179,6 +179,7 @@
     <ClInclude Include="MajorFunction.h" />
     <ClInclude Include="Nsi.h" />
     <ClInclude Include="Pch.h" />
+    <ClInclude Include="Rules.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Attach.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="MajorFunction.cpp" />
     <ClCompile Include="Nsi.cpp" />
     <ClCompile Include="Pch.cpp" />
+    <ClCompile Include="Rules.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\readme.txt" />

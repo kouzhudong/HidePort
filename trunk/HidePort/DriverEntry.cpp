@@ -1,6 +1,7 @@
 #include "DriverEntry.h"
 #include "Attach.h"
 #include "MajorFunction.h"
+#include "Cdo.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +15,8 @@ VOID Unload(_In_ struct _DRIVER_OBJECT * DriverObject)
     UNREFERENCED_PARAMETER(DriverObject);
 
     PAGED_CODE();
+
+    DeleteControlDeviceObject();
 
     Detach(DriverObject);
 
@@ -37,10 +40,6 @@ EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_ST
         KdBreakPoint();//__debugbreak();
     }
 
-    //if (*InitSafeBootMode) {
-    //    return STATUS_ACCESS_DENIED;
-    //}
-
     PAGED_CODE();
 
     DriverObject->DriverUnload = Unload;
@@ -50,6 +49,11 @@ EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_ST
     }
 
     //DriverObject->FastIoDispatch = &g_FastIoDispatch;
+
+    Status = CreateControlDeviceObject(DriverObject);
+    if (!NT_SUCCESS(Status)) {
+        return Status;
+    }
 
     Status = AttachDevice(DriverObject, L"\\Device\\Nsi", L"\\Device\\MyNsi", MY_NSI_DEVICE_TAG);
 
