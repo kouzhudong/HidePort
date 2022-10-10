@@ -58,10 +58,16 @@ void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
     }
 
     PUdpTable Table = (PUdpTable)NsiParam->p1;
+    PBYTE p2 = (PBYTE)NsiParam->p2;
+    PStateTable State = (PStateTable)NsiParam->StateInfo;
+    PProcessTable Module = (PProcessTable)NsiParam->ProcessInfo;
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
+        bool IsHide = false;
+
         if (NsiParam->p1) {
-            if (IsHideUdp(Table)) {
+            IsHide = IsHideUdp(Table);
+            if (IsHide) {
                 //移动这个元素后面的数据到这个元素的位置。
                 memmove(Table, Table + 1, NsiParam->size1 * (NsiParam->Counter - i));
                 NsiParam->Counter--;
@@ -73,16 +79,34 @@ void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
         if (NsiParam->p2) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(p2, p2 + NsiParam->size2, NsiParam->size2 * (NsiParam->Counter - i));
+            }
+
+            p2 += NsiParam->size2;
         }
 
         if (NsiParam->StateInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(State, State + 1, NsiParam->size3 * (NsiParam->Counter - i));
+            }
+
+            State++;
         }
 
         if (NsiParam->ProcessInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(Module, Module + 1, NsiParam->size4 * (NsiParam->Counter - i));
+            }
+
+            Module++;
         }
     }
 
@@ -113,10 +137,16 @@ void HideTcpInfo(_In_ PNsiParameters70 NsiParam)
     }
 
     PTcpTable Table = (PTcpTable)NsiParam->p1;
+    PBYTE p2 = (PBYTE)NsiParam->p2;
+    PStateTable State = (PStateTable)NsiParam->StateInfo;
+    PProcessTable Module = (PProcessTable)NsiParam->ProcessInfo;
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
+        bool IsHide = false;
+
         if (NsiParam->p1) {
-            if (IsHideTcp(Table)) {
+            IsHide = IsHideTcp(Table);
+            if (IsHide) {
                 //移动这个元素后面的数据到这个元素的位置。
                 memmove(Table, Table + 1, NsiParam->size1 * (NsiParam->Counter - i));
                 NsiParam->Counter--;
@@ -128,16 +158,34 @@ void HideTcpInfo(_In_ PNsiParameters70 NsiParam)
         if (NsiParam->p2) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(p2, p2 + NsiParam->size2, NsiParam->size2 * (NsiParam->Counter - i));
+            }
+
+            p2 += NsiParam->size2;
         }
 
         if (NsiParam->StateInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(State, State + 1, NsiParam->size3 * (NsiParam->Counter - i));
+            }
+
+            State++;
         }
 
         if (NsiParam->ProcessInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
+
+            if (IsHide) {
+                memmove(Module, Module + 1, NsiParam->size4 * (NsiParam->Counter - i));
+            }
+
+            Module++;
         }
     }
 
