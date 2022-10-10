@@ -175,11 +175,11 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
             
         }
 
-        if (NsiParam->p3) {
+        if (NsiParam->StateInfo) {
             
         }
 
-        if (NsiParam->p4) {
+        if (NsiParam->ProcessInfo) {
             
         }
     }
@@ -188,11 +188,11 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
-    if (NsiParam->p3) {//仅仅打印信息：经观察和测试，发现这个值大多是0。
+    if (NsiParam->StateInfo) {//仅仅打印信息：经观察和测试，发现这个值大多是0。
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
-    if (NsiParam->p4) {//仅仅打印信息：经观察和测试，发现这个值大多是0x20。
+    if (NsiParam->ProcessInfo) {//仅仅打印信息：经观察和测试，发现这个值大多是0x20。
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
     }
 }
@@ -223,11 +223,11 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
 
         }
 
-        if (NsiParam->p3) {
+        if (NsiParam->StateInfo) {
 
         }
 
-        if (NsiParam->p4) {
+        if (NsiParam->ProcessInfo) {
 
         }
     }   
@@ -240,7 +240,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
-    if (NsiParam->p3) {//这个是啥结构呢？可以分析GetTcp6Table2。
+    if (NsiParam->StateInfo) {//这个是啥结构呢？可以分析GetTcp6Table2。
         /*
         经测试，这个结构的大小是0x10.
 
@@ -253,7 +253,7 @@ void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
         PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
-    if (NsiParam->p4) {//这个是啥结构呢？可以分析GetTcp6Table2。
+    if (NsiParam->ProcessInfo) {//这个是啥结构呢？可以分析GetTcp6Table2。
         /*
         经测试，这个结构的大小是0x20.
 

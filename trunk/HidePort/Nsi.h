@@ -8,6 +8,34 @@
 
 
 #pragma pack(1)
+typedef struct _StateTable
+{
+    MIB_TCP_STATE State;
+    int field_4;
+    TCP_CONNECTION_OFFLOAD_STATE dwOffloadState;
+    int field_C;
+}StateTable, * PStateTable;
+#pragma pack()
+
+static_assert(sizeof(StateTable) == 0x10);
+
+
+#pragma pack(1)
+typedef struct _ProcessTable
+//这里应该还有路径信息。
+{
+    SIZE_T field_0;
+    int field_8;
+    int dwOwningPid;
+    SIZE_T field_10;
+    SIZE_T field_18;
+}ProcessTable, * PProcessTable;
+#pragma pack()
+
+static_assert(sizeof(ProcessTable) == 0x20);
+
+
+#pragma pack(1)
 typedef struct _UdpTable
 {
     //这四个成员应该是SOCKADDR。
@@ -60,10 +88,10 @@ typedef struct _NsiParameters70
     PVOID p2;
     SIZE_T size2;//不是内存的大小，应该是数组的元素的大小。
 
-    PVOID p3;
+    PVOID StateInfo;
     SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
 
-    PVOID p4;
+    PVOID ProcessInfo;
     ULONG size4;//不是内存的大小，应该是数组的元素的大小。
 
     ULONG field_64;

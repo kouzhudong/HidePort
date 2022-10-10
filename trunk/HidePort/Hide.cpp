@@ -45,7 +45,7 @@ void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
 高级做法：隐藏某个进程的所有的网络的通讯信息。
 
 做法：
-移除p1,p2,p3,p4里的相应的节点元素信息即可。
+移除p1,p2,StateInfo,p4里的相应的节点元素信息即可。
 最后不要忘了，减少Counter成员的值。
 */
 {
@@ -75,12 +75,12 @@ void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
             //这里也可以匹配下。
         }
 
-        if (NsiParam->p3) {
+        if (NsiParam->StateInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
         }
 
-        if (NsiParam->p4) {
+        if (NsiParam->ProcessInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
         }
@@ -98,7 +98,7 @@ void HideTcpInfo(_In_ PNsiParameters70 NsiParam)
 高级做法：隐藏某个进程的所有的网络的通讯信息。
 
 做法：
-移除p1,p2,p3,p4里的相应的节点元素信息即可。
+移除p1,p2,StateInfo,p4里的相应的节点元素信息即可。
 最后不要忘了，减少Counter成员的值。
 
 可以考虑：把HideTcpInfo和HideUdpInfo合并为模板。
@@ -130,12 +130,12 @@ void HideTcpInfo(_In_ PNsiParameters70 NsiParam)
             //这里也可以匹配下。
         }
 
-        if (NsiParam->p3) {
+        if (NsiParam->StateInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
         }
 
-        if (NsiParam->p4) {
+        if (NsiParam->ProcessInfo) {
             //如果上面的匹配了，这里也应移除下。
             //这里也可以匹配下。
         }
