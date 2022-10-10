@@ -44,17 +44,18 @@ dwRemotePort
 µÈ¡£
 */
 {
+    CHAR LocalIp[MAX_ADDRESS_STRING_LENGTH] = {0};
+    CHAR RemoteIp[MAX_ADDRESS_STRING_LENGTH] = {0};
+
     switch (Table->LocalFamily) {
     case AF_INET:
     {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
-                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+        RtlIpv4AddressToStringA(&Table->LocalAddrV4, LocalIp);
         break;
     }
     case AF_INET6:
     {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d, RemotePort:%d",
-                RtlUshortByteSwap(Table->LocalPort), RtlUshortByteSwap(Table->RemotePort));
+        RtlIpv6AddressToStringA(&Table->LocalAddrV6, LocalIp);
         break;
     }
     default:
@@ -62,22 +63,50 @@ dwRemotePort
         break;
     }
 
+    switch (Table->RemoteFamily) {
+    case AF_INET:
+    {
+        RtlIpv4AddressToStringA(&Table->RemoteAddrV4, RemoteIp);
+        break;
+    }
+    case AF_INET6:
+    {
+        RtlIpv6AddressToStringA(&Table->RemoteAddrV6, RemoteIp);
+        break;
+    }
+    default:
+        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "RemoteFamily: %d", Table->RemoteFamily);
+        break;
+    }
 
-
+    CHAR Buffer[MAX_PATH] = {0};
+    NTSTRSAFE_PCSTR Format = "%s:%d\t->\t%s:%d";
+    NTSTATUS NtStatus = RtlStringCbPrintfA(Buffer, _ARRAYSIZE(Buffer), Format, // _snprintf sprintf_s
+                                           LocalIp,
+                                           RtlUshortByteSwap(Table->LocalPort),
+                                           RemoteIp,
+                                           RtlUshortByteSwap(Table->RemotePort));
+    if (!NT_SUCCESS(NtStatus)) {
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: status:%#x", NtStatus);
+    } else {
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Info: %s", Buffer);
+    }
 }
 
 
 void DumpUdpEntry(_In_ PUdpTable Table)
 {
+    CHAR LocalIp[MAX_ADDRESS_STRING_LENGTH] = {0};
+
     switch (Table->LocalFamily) {
     case AF_INET:
     {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+        RtlIpv4AddressToStringA(&Table->LocalAddrV4, LocalIp);
         break;
     }
     case AF_INET6:
     {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalPort: %d", RtlUshortByteSwap(Table->LocalPort));
+        RtlIpv6AddressToStringA(&Table->LocalAddrV6, LocalIp);
         break;
     }
     default:
@@ -85,8 +114,16 @@ void DumpUdpEntry(_In_ PUdpTable Table)
         break;
     }
 
-
-
+    CHAR Buffer[MAX_PATH] = {0};
+    NTSTRSAFE_PCSTR Format = "LocalIp:%s, LocalPort:%d";
+    NTSTATUS NtStatus = RtlStringCbPrintfA(Buffer, _ARRAYSIZE(Buffer), Format, // _snprintf sprintf_s
+                                           LocalIp,
+                                           RtlUshortByteSwap(Table->LocalPort));
+    if (!NT_SUCCESS(NtStatus)) {
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: status:%#x", NtStatus);
+    } else {
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Info: %s", Buffer);
+    }
 }
 
 

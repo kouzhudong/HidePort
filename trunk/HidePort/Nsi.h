@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+#pragma pack(1)
 typedef struct _UdpTable
 {
     //这四个成员应该是SOCKADDR。
@@ -17,10 +18,12 @@ typedef struct _UdpTable
 
     DWORD LocalScopeId;
 }UdpTable, * PUdpTable;
+#pragma pack()
 
 static_assert(sizeof(UdpTable) == 0x1C);
 
 
+#pragma pack(1)
 typedef struct _TcpTable
 {
     //这四个成员应该是SOCKADDR。
@@ -38,10 +41,12 @@ typedef struct _TcpTable
 
     DWORD RemoteScopeId;
 }TcpTable, * PTcpTable;
+#pragma pack()
 
 static_assert(sizeof(TcpTable) == 0x38);
 
 
+#pragma pack(1)
 typedef struct _NsiParameters70
 {
     GUID Guid;
@@ -65,8 +70,13 @@ typedef struct _NsiParameters70
     ULONG Counter;
     ULONG field_6C;
 }NsiParameters70, * PNsiParameters70;
+#pragma pack()
 
-static_assert(sizeof(NsiParameters70) == 0x70); //语言功能 "简要静态断言" 需要编译器标志 "/std:c++17"
+#if defined(_WIN64)
+static_assert(sizeof(NsiParameters70) == 0x70);//语言功能 "简要静态断言" 需要编译器标志 "/std:c++17"
+#else 
+static_assert(sizeof(NsiParameters70) == 0x38);//32位的有待分析。去掉GUID大小正好。
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
