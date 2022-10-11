@@ -114,7 +114,7 @@ typedef struct _NsiParameters
 {
     SIZE_T field_0;
     SIZE_T field_4;
-    PNPI_MODULEID ModuleId;//竟然没有这个。假设是这个。
+    PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
 
     SIZE_T field_c;
     SIZE_T field_10;
@@ -130,7 +130,7 @@ typedef struct _NsiParameters
     SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
 
     PVOID ProcessInfo;
-    ULONG size4;//不是内存的大小，应该是数组的元素的大小。
+    SIZE_T size4;//不是内存的大小，应该是数组的元素的大小。
 
     ULONG Counter;
 }NsiParameters, * PNsiParameters;
