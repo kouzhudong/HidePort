@@ -95,10 +95,10 @@ typedef struct _NsiParameters
     SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
 
     PVOID ProcessInfo;
-    ULONG size4;//不是内存的大小，应该是数组的元素的大小。
+    ULONG size4;//不是内存的大小，应该是数组的元素的大小。类型是否为SIZE_T？从而消灭下一个变量
 
     ULONG field_64;
-    ULONG Counter;
+    ULONG Counter;//类型是否为SIZE_T？从而消灭下一个变量
     ULONG field_6C;
 }NsiParameters, * PNsiParameters;
 #pragma pack()
