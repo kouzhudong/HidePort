@@ -33,7 +33,7 @@ NTSTATUS ControlDeviceObjectMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObj
 
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
         break;
     }
@@ -50,7 +50,7 @@ NTSTATUS DeleteControlDeviceObject()
 
     Status = IoDeleteSymbolicLink(&g_SymbolicLinkName);
     if (!NT_SUCCESS(Status)) {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
     }
 
     IoDeleteDevice(g_DeviceObject);
@@ -72,7 +72,7 @@ NTSTATUS CreateControlDeviceObject(_In_ PDRIVER_OBJECT DriverObject)
                             FALSE,
                             &g_DeviceObject);
     if (!NT_SUCCESS(Status)) {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
         return Status;
     }
 
@@ -82,7 +82,7 @@ NTSTATUS CreateControlDeviceObject(_In_ PDRIVER_OBJECT DriverObject)
 
     Status = IoCreateSymbolicLink(&g_SymbolicLinkName, &g_DeviceName);
     if (!NT_SUCCESS(Status)) {
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
         IoDeleteDevice(g_DeviceObject);
         return Status;
     }

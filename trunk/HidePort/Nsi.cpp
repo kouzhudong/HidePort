@@ -34,7 +34,7 @@ NPI_MODULEID NPI_MS_RAW_MODULEID = {
 
 void DumpModuleInfo(_In_ PProcessTable Entry)
 {
-    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OwningPid: %d", Entry->dwOwningPid);
+    PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OwningPid: %d", Entry->dwOwningPid);
 
 
 
@@ -51,65 +51,65 @@ https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ns-tcpmib-mib_tcp6row
 {
     switch (Entry->State) {
     case MIB_TCP_STATE_CLOSED:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closed");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closed");
         break;
     case MIB_TCP_STATE_LISTEN:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the listen state");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the listen state");
         break;
     case MIB_TCP_STATE_SYN_SENT:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been sent");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been sent");
         break;
     case MIB_TCP_STATE_SYN_RCVD:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been received");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "A SYN packet has been received");
         break;
     case MIB_TCP_STATE_ESTAB:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection has been established");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection has been established");
         break;
     case MIB_TCP_STATE_FIN_WAIT1:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
         break;
     case MIB_TCP_STATE_FIN_WAIT2:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is waiting for a FIN packet");
         break;
     case MIB_TCP_STATE_CLOSE_WAIT:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the close wait state");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the close wait state");
         break;
     case MIB_TCP_STATE_CLOSING:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closing");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is closing");
         break;
     case MIB_TCP_STATE_LAST_ACK:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the last ACK state");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the last ACK state");
         break;
     case MIB_TCP_STATE_TIME_WAIT:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the time wait state");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the time wait state");
         break;
     case MIB_TCP_STATE_DELETE_TCB:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the delete TCB state");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %s", "The TCP connection is in the delete TCB state");
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "State: %d", Entry->State);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "State: %d", Entry->State);
         break;
     }
 
     //https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ne-tcpmib-tcp_connection_offload_state
     switch (Entry->dwOffloadState) {
     case TcpConnectionOffloadStateInHost:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "InHost");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "InHost");
         break;
     case TcpConnectionOffloadStateOffloading:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloading");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloading");
         break;
     case TcpConnectionOffloadStateOffloaded:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloaded");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Offloaded");
         break;
     case TcpConnectionOffloadStateUploading:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Uploading");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Uploading");
         break;
     case TcpConnectionOffloadStateMax:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Max");
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %s", "Max");
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "OffloadState: %d", Entry->dwOffloadState);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "OffloadState: %d", Entry->dwOffloadState);
         break;
     }
 
@@ -144,7 +144,7 @@ dwRemotePort
         break;
     }
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
         break;
     }
 
@@ -160,7 +160,7 @@ dwRemotePort
         break;
     }
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "RemoteFamily: %d", Table->RemoteFamily);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "RemoteFamily: %d", Table->RemoteFamily);
         break;
     }
 
@@ -195,7 +195,7 @@ void DumpUdpEntry(_In_ PUdpTable Table)
         break;
     }
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "LocalFamily: %d", Table->LocalFamily);
         break;
     }
 
@@ -227,7 +227,7 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 
     Status = IoCallDriver(DevExt->AttachedDevice, Irp);//这个函数之后禁止访问IrpStack等信息。
     if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
-        //PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x",
+        //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x",
         //        FltGetIrpName(MajorFunction), Status);
     }
 
@@ -245,7 +245,7 @@ void EnumUdpTable(_In_ PNsiParameters NsiParam)
         return;
     }
 
-    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Udp dwNumEntries: %d", NsiParam->Counter);
+    PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Udp dwNumEntries: %d", NsiParam->Counter);
 
     PUdpTable Table = (PUdpTable)NsiParam->p1;
     PStateTable State = (PStateTable)NsiParam->StateInfo;
@@ -273,15 +273,15 @@ void EnumUdpTable(_In_ PNsiParameters NsiParam)
     }
 
     if (NsiParam->p2) {//仅仅打印信息：经观察和测试，发现这个值大多是0。
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
     if (NsiParam->StateInfo) {//仅仅打印信息：经观察和测试，发现这个值大多是0。
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
     if (NsiParam->ProcessInfo) {//仅仅打印信息：经观察和测试，发现这个值大多是0x20。
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
     }
 }
 
@@ -296,7 +296,7 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
         return;
     }
 
-    PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
+    PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Tcp dwNumEntries: %d", NsiParam->Counter);
 
     PTcpTable Table = (PTcpTable)NsiParam->p1;
     PStateTable State = (PStateTable)NsiParam->StateInfo;
@@ -329,7 +329,7 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
         这个结构的指针大多为NULL。
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
     if (NsiParam->StateInfo) {//这个是啥结构呢？可以分析GetTcp6Table2。
@@ -342,7 +342,7 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
 
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
     if (NsiParam->ProcessInfo) {//这个是啥结构呢？可以分析GetTcp6Table2。
@@ -354,7 +354,7 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
 
         */
 
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
     }
 }
 
@@ -422,7 +422,7 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
 
 
     } __except (EXCEPTION_EXECUTE_HANDLER) {
-        Print(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "ExceptionCode:%#X", GetExceptionCode());
+        Print(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "ExceptionCode:%#X", GetExceptionCode());
     }
 
     return Status;
@@ -482,7 +482,7 @@ NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL,
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL,
                 "Warning: MajorFunction: %d, IrpName: %s, IoControlCode:%d",
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction), IoControlCode);
         Status = DefaultMajorFunction(DeviceObject, Irp);
@@ -518,7 +518,7 @@ NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;
     default:
-        PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",
                 IrpStack->MajorFunction, FltGetIrpName(IrpStack->MajorFunction));
         Status = DefaultMajorFunction(DeviceObject, Irp);
         break;

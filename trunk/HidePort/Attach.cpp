@@ -65,7 +65,7 @@ Flag 创建的过滤设备的标志,在设备对象的扩展结构里面.
 
         Status = IoGetDeviceObjectPointer(&ObjectName, FILE_ALL_ACCESS, &FileObject, &DeviceObject);
         if (Status != STATUS_SUCCESS) {//INF里必须设置依赖项，否则这几个设备没创建（STATUS_OBJECT_NAME_NOT_FOUND）。
-            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             break;
         }
 
@@ -79,7 +79,7 @@ Flag 创建的过滤设备的标志,在设备对象的扩展结构里面.
                                 FALSE, 
                                 &FilterDeviceObject);//可以考虑保存这个值到全局变量。
         if (!NT_SUCCESS(Status)) {
-            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             break;
         }
 
@@ -87,7 +87,7 @@ Flag 创建的过滤设备的标志,在设备对象的扩展结构里面.
 
         Status = IoAttachDeviceToDeviceStackSafe(FilterDeviceObject, DeviceObject, &AttachedDevice);//返回附加前的顶层设备。
         if (!NT_SUCCESS(Status)) {
-            PrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             IoDeleteDevice(FilterDeviceObject);
             break;
         }
