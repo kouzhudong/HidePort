@@ -113,13 +113,15 @@ static_assert(sizeof(NsiParameters) == 0x70);//ÓïÑÔ¹¦ÄÜ "¼òÒª¾²Ì¬¶ÏÑÔ" ĞèÒª±àÒëÆ
 typedef struct _NsiParameters
 {
     SIZE_T field_0;
+    SIZE_T field_4;
     PNPI_MODULEID ModuleId;//¾¹È»Ã»ÓĞÕâ¸ö¡£¼ÙÉèÊÇÕâ¸ö¡£
+
+    SIZE_T field_c;
+    SIZE_T field_10;
+    SIZE_T field_14;
 
     PVOID p1;
     SIZE_T size1;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
-
-    SIZE_T field_10;
-    SIZE_T field_14;
 
     PVOID p2;
     SIZE_T size2;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
@@ -131,12 +133,10 @@ typedef struct _NsiParameters
     ULONG size4;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
 
     ULONG Counter;
-    ULONG field_34;    
-    ULONG field_38;
 }NsiParameters, * PNsiParameters;
 #pragma pack()
 
-static_assert(sizeof(NsiParameters) == 0x3C);//32Î»µÄÓĞ´ı·ÖÎöºÍ²âÊÔÑéÖ¤¡£
+static_assert(sizeof(NsiParameters) == 0x3C);
 
 
 #endif
