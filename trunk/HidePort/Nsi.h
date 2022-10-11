@@ -20,8 +20,7 @@ typedef struct _StateTable
 static_assert(sizeof(StateTable) == 0x10);
 
 
-#pragma pack(1)
-typedef struct _ProcessTable
+typedef __declspec(align(32)) struct _ProcessTable
 //这里应该还有路径信息。
 {
     SIZE_T field_0;
@@ -30,7 +29,6 @@ typedef struct _ProcessTable
     SIZE_T field_10;
     SIZE_T field_18;
 }ProcessTable, * PProcessTable;
-#pragma pack()
 
 static_assert(sizeof(ProcessTable) == 0x20);
 
@@ -74,8 +72,13 @@ typedef struct _TcpTable
 static_assert(sizeof(TcpTable) == 0x38);
 
 
+
+
+#if defined(_WIN64)
+
+
 #pragma pack(1)
-typedef struct _NsiParameters70
+typedef struct _NsiParameters
 {
     GUID Guid;
     PNPI_MODULEID ModuleId;
@@ -97,13 +100,45 @@ typedef struct _NsiParameters70
     ULONG field_64;
     ULONG Counter;
     ULONG field_6C;
-}NsiParameters70, * PNsiParameters70;
+}NsiParameters, * PNsiParameters;
 #pragma pack()
 
-#if defined(_WIN64)
-static_assert(sizeof(NsiParameters70) == 0x70);//语言功能 "简要静态断言" 需要编译器标志 "/std:c++17"
+static_assert(sizeof(NsiParameters) == 0x70);//语言功能 "简要静态断言" 需要编译器标志 "/std:c++17"
+
+
 #else 
-static_assert(sizeof(NsiParameters70) == 0x38);//32位的有待分析。去掉GUID大小正好。
+
+
+#pragma pack(1)
+typedef struct _NsiParameters
+{
+    SIZE_T field_0;
+    PNPI_MODULEID ModuleId;//竟然没有这个。假设是这个。
+
+    PVOID p1;
+    SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
+
+    SIZE_T field_10;
+    SIZE_T field_14;
+
+    PVOID p2;
+    SIZE_T size2;//不是内存的大小，应该是数组的元素的大小。
+
+    PVOID StateInfo;
+    SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
+
+    PVOID ProcessInfo;
+    ULONG size4;//不是内存的大小，应该是数组的元素的大小。
+
+    ULONG Counter;
+    ULONG field_34;    
+    ULONG field_38;
+}NsiParameters, * PNsiParameters;
+#pragma pack()
+
+static_assert(sizeof(NsiParameters) == 0x3C);//32位的有待分析和测试验证。
+
+
 #endif
 
 

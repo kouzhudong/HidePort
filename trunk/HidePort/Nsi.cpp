@@ -235,7 +235,7 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 }
 
 
-void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
+void EnumUdpTable(_In_ PNsiParameters NsiParam)
 {
     if (nullptr == NsiParam) {
         return;
@@ -286,7 +286,7 @@ void EnumUdpTable(_In_ PNsiParameters70 NsiParam)
 }
 
 
-void EnumTcpTable(_In_ PNsiParameters70 NsiParam)
+void EnumTcpTable(_In_ PNsiParameters NsiParam)
 {
     if (nullptr == NsiParam) {
         return;
@@ -400,7 +400,7 @@ InputBufferLength：不小于0x3C，也不小于0x70。经观察都是0x70。
     //}
 
     __try {
-        PNsiParameters70 NsiParam = (PNsiParameters70)Type3InputBuffer;
+        PNsiParameters NsiParam = (PNsiParameters)Type3InputBuffer;
         PNPI_MODULEID ModuleId = NsiParam->ModuleId;
 
         if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {

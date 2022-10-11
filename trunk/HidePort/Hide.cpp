@@ -42,7 +42,7 @@ bool IsHideTcp(_In_ PTcpTable Entry)
 }
 
 
-void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
+void HideUdpInfo(_In_ PNsiParameters NsiParam)
 /*
 功能：隐藏UDP网络信息，如：本地端口。
 
@@ -119,7 +119,7 @@ void HideUdpInfo(_In_ PNsiParameters70 NsiParam)
 }
 
 
-void HideTcpInfo(_In_ PNsiParameters70 NsiParam)
+void HideTcpInfo(_In_ PNsiParameters NsiParam)
 /*
 功能：隐藏Tcp网络信息，如：本地端口，远端IP(v4/6)。
 
