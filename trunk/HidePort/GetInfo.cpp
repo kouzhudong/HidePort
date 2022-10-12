@@ -46,7 +46,7 @@ NTSTATUS GetTcpNumbers(_In_ PULONG Counter)
     NsiParam.ModuleId = &NPI_MS_TCP_MODULEID;
     NsiParam.Flag1 = 3;
 #if defined(_WIN64)
-    NsiParam->Flag2 = 1 | 0x100000000i64;
+    NsiParam.Flag2 = 1 | 0x100000000i64;
 #else 
 
 #endif
