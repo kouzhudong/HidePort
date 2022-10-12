@@ -175,6 +175,7 @@
     <ClInclude Include="Attach.h" />
     <ClInclude Include="Cdo.h" />
     <ClInclude Include="DriverEntry.h" />
+    <ClInclude Include="GetInfo.h" />
     <ClInclude Include="Hide.h" />
     <ClInclude Include="MajorFunction.h" />
     <ClInclude Include="Nsi.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Attach.cpp" />
     <ClCompile Include="Cdo.cpp" />
     <ClCompile Include="DriverEntry.cpp" />
+    <ClCompile Include="GetInfo.cpp" />
     <ClCompile Include="Hide.cpp" />
     <ClCompile Include="MajorFunction.cpp" />
     <ClCompile Include="Nsi.cpp" />

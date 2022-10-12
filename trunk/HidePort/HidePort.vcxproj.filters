@@ -48,6 +48,9 @@
     <ClInclude Include="Rules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GetInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DriverEntry.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rules.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GetInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

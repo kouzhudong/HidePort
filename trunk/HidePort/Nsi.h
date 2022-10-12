@@ -72,18 +72,17 @@ typedef struct _TcpTable
 static_assert(sizeof(TcpTable) == 0x38);
 
 
-
-
 #if defined(_WIN64)
 
 
 #pragma pack(1)
-typedef struct _NsiParameters
+typedef struct _NsiParameters //__declspec(align(16))
 {
     GUID Guid;
     PNPI_MODULEID ModuleId;
-    SIZE_T field_18;
-    SIZE_T Flag;
+
+    SIZE_T Flag1;
+    SIZE_T Flag2;
 
     PVOID p1;
     SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
@@ -114,11 +113,12 @@ typedef struct _NsiParameters
 {
     SIZE_T field_0;
     SIZE_T field_4;
-    PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
 
-    SIZE_T field_c;
-    SIZE_T field_10;
-    SIZE_T field_14;
+    PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
+    SIZE_T u;//估计是对齐用的。
+
+    SIZE_T Flag1;//有待验证。
+    SIZE_T Flag2;//有待验证。    
 
     PVOID p1;
     SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
@@ -132,7 +132,7 @@ typedef struct _NsiParameters
     PVOID ProcessInfo;
     SIZE_T size4;//不是内存的大小，应该是数组的元素的大小。
 
-    ULONG Counter;
+    SIZE_T Counter;
 }NsiParameters, * PNsiParameters;
 #pragma pack()
 
@@ -145,7 +145,14 @@ static_assert(sizeof(NsiParameters) == 0x3C);
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+extern NPI_MODULEID NPI_MS_TCP_MODULEID;
+extern NPI_MODULEID NPI_MS_UDP_MODULEID;
+extern NPI_MODULEID NPI_MS_RAW_MODULEID;
+
+
 NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp);
+void EnumUdpTable(_In_ PNsiParameters NsiParam);
+void EnumTcpTable(_In_ PNsiParameters NsiParam);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,4 +162,3 @@ class Nsi
 {
 
 };
-

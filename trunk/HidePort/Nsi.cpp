@@ -395,6 +395,15 @@ NsippEnumerateObjectsAllParameters(Type3InputBuffer,
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
 
+    {//Test.
+        PNsiParameters NsiParam = (PNsiParameters)Type3InputBuffer;
+        PNPI_MODULEID ModuleId = NsiParam->ModuleId;
+
+        if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
+            ModuleId = 0;
+        }
+    }
+
     Status = DefaultMajorFunction(DeviceObject, Irp);
     if (!NT_SUCCESS(Status)) {
         return Status;//大多是STATUS_MORE_ENTRIES，而不是挂起状态：STATUS_PENDING。

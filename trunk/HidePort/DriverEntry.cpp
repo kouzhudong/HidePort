@@ -2,6 +2,7 @@
 #include "Attach.h"
 #include "MajorFunction.h"
 #include "Cdo.h"
+#include "GetInfo.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +56,11 @@ EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_ST
         return Status;
     }
 
+    EnumTcpTable();
+
     Status = AttachDevice(DriverObject, L"\\Device\\Nsi", L"\\Device\\MyNsi", MY_NSI_DEVICE_TAG);
+
+    EnumTcpTable();
 
     return Status;
 }
