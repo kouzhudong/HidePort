@@ -8,7 +8,7 @@
 
 
 #pragma pack(1)
-typedef struct _StateTable
+typedef struct _StateTable //Tcp特有，Udp没有。
 {
     MIB_TCP_STATE State;
     int field_4;

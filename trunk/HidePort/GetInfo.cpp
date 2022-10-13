@@ -287,6 +287,52 @@ NTSTATUS InitTcpNsiParam(_In_ PNsiParameters NsiParam)
 }
 
 
+NTSTATUS InitUdpNsiParam(_In_ PNsiParameters NsiParam)
+{
+    NTSTATUS Status = STATUS_UNSUCCESSFUL;
+
+    if (nullptr == NsiParam || 0 == NsiParam->Counter) {
+
+        return Status;
+    }
+
+    NsiParam->Counter += 2;
+    NsiParam->ModuleId = &NPI_MS_UDP_MODULEID;
+    NsiParam->Flag1 = 1;
+    NsiParam->Flag2.QuadPart = 1 | 0x100000000i64;
+
+    __try {
+        NsiParam->p1 = ExAllocatePoolWithTag(NonPagedPool, sizeof(UdpTable) * NsiParam->Counter, TAG);
+        if (nullptr == NsiParam->p1) {
+
+            __leave;
+        }
+
+        RtlZeroMemory(NsiParam->p1, sizeof(UdpTable) * NsiParam->Counter);
+        NsiParam->size1 = sizeof(UdpTable);
+
+        NsiParam->ProcessInfo = ExAllocatePoolWithTag(NonPagedPool, sizeof(ProcessTable) * NsiParam->Counter, TAG);
+        if (nullptr == NsiParam->ProcessInfo) {
+
+            __leave;
+        }
+
+        RtlZeroMemory(NsiParam->ProcessInfo, sizeof(ProcessTable) * NsiParam->Counter);
+        NsiParam->size4 = sizeof(ProcessTable);
+
+        NsiParam->Counter -= 2;
+
+        Status = STATUS_SUCCESS;
+    } __finally {
+        if (!NT_SUCCESS(Status)) {
+            FreeNsiParam(NsiParam);
+        }
+    }
+
+    return Status;
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -366,7 +412,7 @@ NTSTATUS EnumTcpTable()
                               (PVOID)NULL,
                               0L);
         if (!NT_SUCCESS(Status)) {
-
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             __leave;
         }
 
@@ -385,13 +431,13 @@ NTSTATUS EnumTcpTable()
                                        &NsiParam,
                                        sizeof(NsiParameters));
         if (!NT_SUCCESS(Status)) {
-
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             __leave;
         }
 
         Status = InitTcpNsiParam(&NsiParam);
         if (!NT_SUCCESS(Status)) {
-            
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             __leave;
         }
 
@@ -406,7 +452,7 @@ NTSTATUS EnumTcpTable()
                                        &NsiParam,
                                        sizeof(NsiParameters));
         if (!NT_SUCCESS(Status)) {
-            
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             __leave;
         }
 
@@ -434,9 +480,90 @@ NTSTATUS EnumUdpTable()
 
 */
 {
+    HANDLE FileHandle = nullptr;
+    NsiParameters NsiParam{};
     NTSTATUS Status = STATUS_SUCCESS;
 
+    __try {
+        UNICODE_STRING UnicodeString{};
+        RtlInitUnicodeString(&UnicodeString, L"\\Device\\Nsi");
 
+        OBJECT_ATTRIBUTES ObjectAttributes{};
+        InitializeObjectAttributes(&ObjectAttributes,
+                                   &UnicodeString,
+                                   OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE,
+                                   NULL,
+                                   NULL);
+
+        IO_STATUS_BLOCK IoStatus{};
+        Status = ZwCreateFile(&FileHandle,
+                              FILE_READ_DATA | FILE_WRITE_DATA | SYNCHRONIZE,
+                              &ObjectAttributes,
+                              &IoStatus,
+                              (PLARGE_INTEGER)NULL,
+                              0L,
+                              0L,
+                              FILE_OPEN_IF,
+                              FILE_SYNCHRONOUS_IO_ALERT,
+                              (PVOID)NULL,
+                              0L);
+        if (!NT_SUCCESS(Status)) {
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            __leave;
+        }
+
+        NsiParam.ModuleId = &NPI_MS_UDP_MODULEID;
+        NsiParam.Flag1 = 1;
+        NsiParam.Flag2.QuadPart = 1 | 0x100000000i64;
+
+        Status = ZwDeviceIoControlFile(FileHandle,
+                                       (HANDLE)NULL,
+                                       (PIO_APC_ROUTINE)NULL,
+                                       (PVOID)NULL,
+                                       &IoStatus,
+                                       0x12001Bu,
+                                       &NsiParam,
+                                       sizeof(NsiParameters),
+                                       &NsiParam,
+                                       sizeof(NsiParameters));
+        if (!NT_SUCCESS(Status)) {
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            __leave;
+        }
+
+        Status = InitUdpNsiParam(&NsiParam);
+        if (!NT_SUCCESS(Status)) {
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            __leave;
+        }
+
+        Status = ZwDeviceIoControlFile(FileHandle,
+                                       (HANDLE)NULL,
+                                       (PIO_APC_ROUTINE)NULL,
+                                       (PVOID)NULL,
+                                       &IoStatus,
+                                       0x12001Bu,
+                                       &NsiParam,
+                                       sizeof(NsiParameters),
+                                       &NsiParam,
+                                       sizeof(NsiParameters));
+        if (!NT_SUCCESS(Status)) {
+            PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+            __leave;
+        }
+
+        EnumUdpTable(&NsiParam);
+    } __finally {
+        if (FileHandle) {
+            Status = ZwClose(FileHandle);
+            if (Status != STATUS_SUCCESS) {
+
+                return Status;
+            }
+        }
+
+        FreeNsiParam(&NsiParam);
+    }
 
     return Status;
 }
