@@ -290,11 +290,15 @@ NTSTATUS InitTcpNsiParam(_In_ PNsiParameters NsiParam)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-NTSTATUS EnumTcpTable()
+NTSTATUS EnumTcpTableX()
 /*
 功能：枚举TCP信息。
 
+注释：失败的函数，失败的显现：第二次IO去获取信息的时候，返回STATUS_ACCESS_VIOLATION。
 
+改正办法：第一次获取个数和第二次获取具体的信息，都用同一个句柄。
+
+看来过度封装和模块化也是错。
 */
 {
     NsiParameters NsiParam{};
@@ -322,6 +326,102 @@ NTSTATUS EnumTcpTable()
     EnumTcpTable(&NsiParam);
 
     FreeNsiParam(&NsiParam);
+
+    return Status;
+}
+
+
+NTSTATUS EnumTcpTable()
+/*
+功能：枚举TCP信息。
+
+切记：第一次获取个数和第二次获取具体的信息都用同一个句柄，否则返回STATUS_ACCESS_VIOLATION。
+*/
+{
+    HANDLE FileHandle = nullptr;
+    NsiParameters NsiParam{};
+    NTSTATUS Status = STATUS_SUCCESS;
+
+    __try {
+        UNICODE_STRING UnicodeString{};
+        RtlInitUnicodeString(&UnicodeString, L"\\Device\\Nsi");
+
+        OBJECT_ATTRIBUTES ObjectAttributes{};
+        InitializeObjectAttributes(&ObjectAttributes,
+                                   &UnicodeString,
+                                   OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE,
+                                   NULL,
+                                   NULL);
+
+        IO_STATUS_BLOCK IoStatus{};
+        Status = ZwCreateFile(&FileHandle,
+                              FILE_READ_DATA | FILE_WRITE_DATA | SYNCHRONIZE,
+                              &ObjectAttributes,
+                              &IoStatus,
+                              (PLARGE_INTEGER)NULL,
+                              0L,
+                              0L,
+                              FILE_OPEN_IF,
+                              FILE_SYNCHRONOUS_IO_ALERT,
+                              (PVOID)NULL,
+                              0L);
+        if (!NT_SUCCESS(Status)) {
+
+            __leave;
+        }
+
+        NsiParam.ModuleId = &NPI_MS_TCP_MODULEID;
+        NsiParam.Flag1 = 3;
+        NsiParam.Flag2.QuadPart = 1 | 0x100000000i64;
+
+        Status = ZwDeviceIoControlFile(FileHandle,
+                                       (HANDLE)NULL,
+                                       (PIO_APC_ROUTINE)NULL,
+                                       (PVOID)NULL,
+                                       &IoStatus,
+                                       0x12001Bu,
+                                       &NsiParam,
+                                       sizeof(NsiParameters),
+                                       &NsiParam,
+                                       sizeof(NsiParameters));
+        if (!NT_SUCCESS(Status)) {
+
+            __leave;
+        }
+
+        Status = InitTcpNsiParam(&NsiParam);
+        if (!NT_SUCCESS(Status)) {
+            
+            __leave;
+        }
+
+        Status = ZwDeviceIoControlFile(FileHandle,
+                                       (HANDLE)NULL,
+                                       (PIO_APC_ROUTINE)NULL,
+                                       (PVOID)NULL,
+                                       &IoStatus,
+                                       0x12001Bu,
+                                       &NsiParam,
+                                       sizeof(NsiParameters),
+                                       &NsiParam,
+                                       sizeof(NsiParameters));
+        if (!NT_SUCCESS(Status)) {
+            
+            __leave;
+        }
+
+        EnumTcpTable(&NsiParam);
+    } __finally {
+        if (FileHandle) {
+            Status = ZwClose(FileHandle);
+            if (Status != STATUS_SUCCESS) {
+
+                return Status;
+            }
+        }
+
+        FreeNsiParam(&NsiParam);
+    }
 
     return Status;
 }
