@@ -26,11 +26,11 @@ Routine Description
 
     printf("Start Hide：\"%ls\" StartHide\r\n", exe);
 
-    printf("Hide Port(Tcp and Udp)：\"%ls\" HidePort Port\r\n", exe);
+    printf("Hide Local Port(Tcp and Udp)：\"%ls\" HidePort Port\r\n", exe);
     printf("Hide Remote IPv4(Tcp Only)：\"%ls\" HideIPv4 IPv4\r\n", exe);
     printf("Hide Remote IPv6(Tcp Only)：\"%ls\" HideIPv6 IPv6\r\n", exe);
 
-    printf("Remove Port(Tcp and Udp)：\"%ls\" RemovePort Port\r\n", exe);
+    printf("Remove Local Port(Tcp and Udp)：\"%ls\" RemovePort Port\r\n", exe);
     printf("Remove Remote IPv4(Tcp Only)：\"%ls\" RemoveIPv4 IPv4\r\n", exe);
     printf("Remove Remote IPv6(Tcp Only)：\"%ls\" RemoveIPv6 IPv6\r\n", exe);
 

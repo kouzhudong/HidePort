@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-NTSTATUS GetTcpNumbers(_In_ PULONG Counter)
+NTSTATUS GetTcpNumbers(_In_ PSIZE_T Counter)
 {
     UNICODE_STRING UnicodeString{};
     RtlInitUnicodeString(&UnicodeString, L"\\Device\\Nsi");
