@@ -395,12 +395,16 @@ NsippEnumerateObjectsAllParameters(Type3InputBuffer,
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
 
-    {//Test.
-        PNsiParameters NsiParam = (PNsiParameters)Type3InputBuffer;
-        PNPI_MODULEID ModuleId = NsiParam->ModuleId;
+    {//测试，解决，分析，定位问题的辅助代码。
+        __try {
+            PNsiParameters NsiParam = (PNsiParameters)Type3InputBuffer;
+            PNPI_MODULEID ModuleId = NsiParam->ModuleId;
 
-        if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
-            ModuleId = 0;
+            if (NmrIsEqualNpiModuleId(ModuleId, &NPI_MS_TCP_MODULEID)) {
+                ModuleId = 0;
+            }
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
+            Print(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "ExceptionCode:%#X", GetExceptionCode());
         }
     }
 

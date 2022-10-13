@@ -57,10 +57,12 @@ EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_ST
     }
 
     EnumTcpTable();
+    EnumUdpTable();
 
     Status = AttachDevice(DriverObject, L"\\Device\\Nsi", L"\\Device\\MyNsi", MY_NSI_DEVICE_TAG);
 
     EnumTcpTable();
+    EnumUdpTable();
 
     return Status;
 }

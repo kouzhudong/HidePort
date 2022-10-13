@@ -45,11 +45,7 @@ NTSTATUS GetTcpNumbers(_In_ PSIZE_T Counter)
     NsiParameters NsiParam{};
     NsiParam.ModuleId = &NPI_MS_TCP_MODULEID;
     NsiParam.Flag1 = 3;
-#if defined(_WIN64)
-    NsiParam.Flag2 = 1 | 0x100000000i64;
-#else 
-
-#endif
+    NsiParam.Flag2.QuadPart = 1 | 0x100000000i64;
 
     Status = ZwDeviceIoControlFile(FileHandle,
                                    (HANDLE)NULL,
@@ -248,11 +244,7 @@ NTSTATUS InitTcpNsiParam(_In_ PNsiParameters NsiParam)
     NsiParam->Counter += 2;
     NsiParam->ModuleId = &NPI_MS_TCP_MODULEID;
     NsiParam->Flag1 = 3;
-#if defined(_WIN64)
-    NsiParam->Flag2 = 1 | 0x100000000i64;
-#else 
-
-#endif
+    NsiParam->Flag2.QuadPart = 1 | 0x100000000i64;
 
     __try {        
         NsiParam->p1 = ExAllocatePoolWithTag(NonPagedPool, sizeof(TcpTable) * NsiParam->Counter, TAG);

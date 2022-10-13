@@ -82,7 +82,7 @@ typedef struct _NsiParameters //__declspec(align(16))
     PNPI_MODULEID ModuleId;
 
     SIZE_T Flag1;
-    SIZE_T Flag2;
+    LARGE_INTEGER Flag2;
 
     PVOID p1;
     SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
@@ -113,10 +113,9 @@ typedef struct _NsiParameters
     SIZE_T field_4;
 
     PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
-    SIZE_T u;//估计是对齐用的。
 
     SIZE_T Flag1;//有待验证。
-    SIZE_T Flag2;//有待验证。    
+    LARGE_INTEGER Flag2;//有待验证。    
 
     PVOID p1;
     SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
