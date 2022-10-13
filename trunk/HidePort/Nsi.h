@@ -72,13 +72,12 @@ typedef struct _TcpTable
 static_assert(sizeof(TcpTable) == 0x38);
 
 
-#if defined(_WIN64)
-
-
 #pragma pack(1)
 typedef struct _NsiParameters //__declspec(align(16))
 {
-    GUID Guid;
+    SIZE_T Unknown1;
+    SIZE_T Unknown2;
+
     PNPI_MODULEID ModuleId;
 
     SIZE_T Flag1;
@@ -100,42 +99,11 @@ typedef struct _NsiParameters //__declspec(align(16))
 }NsiParameters, * PNsiParameters;
 #pragma pack()
 
+
+#if defined(_WIN64)
 static_assert(sizeof(NsiParameters) == 0x70);//语言功能 "简要静态断言" 需要编译器标志 "/std:c++17"
-
-
 #else 
-
-
-#pragma pack(1)
-typedef struct _NsiParameters
-{
-    SIZE_T field_0;
-    SIZE_T field_4;
-
-    PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
-
-    SIZE_T Flag1;
-    LARGE_INTEGER Flag2;   
-
-    PVOID p1;
-    SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
-
-    PVOID p2;
-    SIZE_T size2;//不是内存的大小，应该是数组的元素的大小。
-
-    PVOID StateInfo;
-    SIZE_T size3;//不是内存的大小，应该是数组的元素的大小。
-
-    PVOID ProcessInfo;
-    SIZE_T size4;//不是内存的大小，应该是数组的元素的大小。
-
-    SIZE_T Counter;
-}NsiParameters, * PNsiParameters;
-#pragma pack()
-
 static_assert(sizeof(NsiParameters) == 0x3C);
-
-
 #endif
 
 
