@@ -114,8 +114,8 @@ typedef struct _NsiParameters
 
     PNPI_MODULEID ModuleId;//IDA没有分析出，WinDbg调试发现的。
 
-    SIZE_T Flag1;//有待验证。
-    LARGE_INTEGER Flag2;//有待验证。    
+    SIZE_T Flag1;
+    LARGE_INTEGER Flag2;   
 
     PVOID p1;
     SIZE_T size1;//不是内存的大小，应该是数组的元素的大小。
