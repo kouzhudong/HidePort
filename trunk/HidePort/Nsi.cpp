@@ -220,16 +220,16 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
     UCHAR MajorFunction = IrpStack->MajorFunction;
     bool IsReleaseRemoveLock = true;
 
+    Status = IoAcquireRemoveLock(&DevExt->RemoveLock, Irp);
+    if (!NT_SUCCESS(Status)) {//STATUS_DELETE_PENDING
+        //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);//信息太多。
+        IsReleaseRemoveLock = false;
+    }
+
     if (Irp->CurrentLocation <= 1) {
         IoSkipCurrentIrpStackLocation(Irp);
     } else {
         IoCopyCurrentIrpStackLocationToNext(Irp);
-    }
-    
-    Status = IoAcquireRemoveLock(&DevExt->RemoveLock, Irp);
-    if (!NT_SUCCESS(Status)) {
-        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
-        IsReleaseRemoveLock = false;
     }
 
     Status = IoCallDriver(DevExt->AttachedDevice, Irp);//这个函数之后禁止访问IrpStack等信息。

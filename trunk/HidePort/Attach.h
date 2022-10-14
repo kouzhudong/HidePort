@@ -10,7 +10,7 @@ typedef struct _DEVICE_EXTENSION
 {
     ULONG DeviceTag; //可以填写的值有NPFS,MSFS,CD0
     PDEVICE_OBJECT AttachedDevice;
-    IO_REMOVE_LOCK RemoveLock;
+    IO_REMOVE_LOCK RemoveLock;//经测试验证：无用的安全卸载机制。
 } DEVICE_EXTENSION, * PDEVICE_EXTENSION;
 
 
