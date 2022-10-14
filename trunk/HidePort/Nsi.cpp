@@ -216,19 +216,36 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 {
     PDEVICE_EXTENSION DevExt = (PDEVICE_EXTENSION)DeviceObject->DeviceExtension;
     NTSTATUS Status = STATUS_SUCCESS;
-    //PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
-    //UCHAR MajorFunction = IrpStack->MajorFunction;
+    PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
+    UCHAR MajorFunction = IrpStack->MajorFunction;
+    bool IsReleaseRemoveLock = true;
 
     if (Irp->CurrentLocation <= 1) {
         IoSkipCurrentIrpStackLocation(Irp);
     } else {
         IoCopyCurrentIrpStackLocationToNext(Irp);
     }
+    
+    Status = IoAcquireRemoveLock(&DevExt->RemoveLock, Irp);
+    if (!NT_SUCCESS(Status)) {
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
+        IsReleaseRemoveLock = false;
+    }
 
     Status = IoCallDriver(DevExt->AttachedDevice, Irp);//这个函数之后禁止访问IrpStack等信息。
+
+    if (IsReleaseRemoveLock) {
+        IoReleaseRemoveLockAndWait(&DevExt->RemoveLock, Irp);
+    }
+
     if (!NT_SUCCESS(Status)) {//这里失败是很正常的。
         //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x",
         //        FltGetIrpName(MajorFunction), Status);
+    }
+
+    if (STATUS_PENDING == Status) {//可以考虑把这个IRP保存到链表，在后面，如：卸载的时候再处理，如：IoCancelIrp.
+        PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL, "Warning: Pending Irp:%p, IrpName: %s", 
+                Irp, FltGetIrpName(MajorFunction));
     }
 
     return Status;

@@ -95,6 +95,7 @@ Flag 创建的过滤设备的标志,在设备对象的扩展结构里面.
         DevExt = (PDEVICE_EXTENSION)FilterDeviceObject->DeviceExtension;
         DevExt->AttachedDevice = AttachedDevice;//可以考虑保存这个值到全局变量，用于DetachDevice。
         DevExt->DeviceTag = Flag;
+        IoInitializeRemoveLock(&DevExt->RemoveLock, TAG, 0, 0);
     } while (FALSE);
 
     return Status;
