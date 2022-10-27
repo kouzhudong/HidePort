@@ -44,8 +44,10 @@ PVOID NTAPI AllocateRoutine(__in struct _RTL_GENERIC_TABLE * Table, __in CLONG  
 */
 {
     UNREFERENCED_PARAMETER(Table);
+    UNREFERENCED_PARAMETER(ByteSize);
 
-    return ExAllocatePoolWithTag(NonPagedPool, ByteSize, TAG);
+    //return ExAllocatePoolWithTag(NonPagedPool, ByteSize, TAG);
+    return ExAllocateFromNPagedLookasideList(&g_LocalPortLookaside);
 }
 
 
@@ -56,7 +58,8 @@ VOID NTAPI FreeRoutine(__in struct _RTL_GENERIC_TABLE * Table, __in PVOID  Buffe
 {
     UNREFERENCED_PARAMETER(Table);
 
-    ExFreePoolWithTag(Buffer, TAG);
+    //ExFreePoolWithTag(Buffer, TAG);
+    ExFreeToNPagedLookasideList(&g_LocalPortLookaside, Buffer);
 }
 
 
@@ -75,7 +78,6 @@ void InitializeGenericTable()
 
 bool InsertElementGenericTable(WORD LocalPort)
 {
-    PVOID p = NULL;
     BOOLEAN NewElement = FALSE;
     KIRQL oldIrql;
     bool ret = false;
@@ -90,48 +92,37 @@ bool InsertElementGenericTable(WORD LocalPort)
         return ret;
     }
 
-    PHIDE_LOCAL_PORT Element = (PHIDE_LOCAL_PORT)ExAllocateFromNPagedLookasideList(&g_LocalPortLookaside);
-    if (!Element) {
-
-        return ret;
-    }
-
-    Element->LocalPort = LocalPort;
+    HIDE_LOCAL_PORT Element{};
+    Element.LocalPort = LocalPort;
 
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
-    p = RtlInsertElementGenericTable(&g_LocalPortTable, Element, g_LocalPortLookaside.L.Size, &NewElement);
-    KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
-
-    if (!p) {
-        ExFreeToNPagedLookasideList(&g_LocalPortLookaside, Element);
-    } else {
+    if (RtlInsertElementGenericTable(&g_LocalPortTable, &Element, g_LocalPortLookaside.L.Size, &NewElement)) {
         ret = true;
     }
+    KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);    
 
     return ret;
 }
 
 
-PHIDE_LOCAL_PORT LookupElementGenericTable(WORD LocalPort)
+bool IsHideLocalPort(WORD LocalPort)
 /*
 功能：查找某个元素的其他成员的信息。
 */
 {
-    PVOID p = NULL;
-    PHIDE_LOCAL_PORT pc = NULL;
     KIRQL oldIrql;
     HIDE_LOCAL_PORT Element{};
+    bool ret = false;
 
     Element.LocalPort = LocalPort;
 
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
-    p = RtlLookupElementGenericTable(&g_LocalPortTable, &Element);
-    if (p) {
-        pc = (PHIDE_LOCAL_PORT)p;
+    if (RtlLookupElementGenericTable(&g_LocalPortTable, &Element)) {
+        ret = true;;
     } 
     KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
 
-    return pc;
+    return ret;
 }
 
 
@@ -140,7 +131,7 @@ BOOL DeleteGenericTableElement(WORD LocalPort)
 用法：
 */
 {
-    PVOID p = NULL;
+    PVOID Temp = NULL;
     BOOL B = FALSE;
     KIRQL oldIrql;
     HIDE_LOCAL_PORT Element{};
@@ -148,10 +139,9 @@ BOOL DeleteGenericTableElement(WORD LocalPort)
     Element.LocalPort = LocalPort;
 
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
-    p = RtlLookupElementGenericTable(&g_LocalPortTable, &Element);
-    if (p) {
-        RtlDeleteElementGenericTable(&g_LocalPortTable, p);
-        ExFreeToNPagedLookasideList(&g_LocalPortLookaside, p);
+    Temp = RtlLookupElementGenericTable(&g_LocalPortTable, &Element);
+    if (Temp) {
+        RtlDeleteElementGenericTable(&g_LocalPortTable, Temp);//Temp在FreeRoutine中释放了。
         B = TRUE;
     }
     KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
@@ -185,8 +175,7 @@ void DeleteGenericTable()
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
     while (!RtlIsGenericTableEmpty(&g_LocalPortTable)) {
         PVOID Element = RtlGetElementGenericTable(&g_LocalPortTable, 0);
-        RtlDeleteElementGenericTable(&g_LocalPortTable, Element);
-        ExFreeToNPagedLookasideList(&g_LocalPortLookaside, Element);
+        RtlDeleteElementGenericTable(&g_LocalPortTable, Element);//Element在FreeRoutine中释放了。
     }
     KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
 

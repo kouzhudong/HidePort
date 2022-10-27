@@ -7,7 +7,7 @@
 
 
 typedef struct _HIDE_LOCAL_PORT {
-    WORD LocalPort;
+    WORD LocalPort;//±¾µØÐò£¬·ÇÍøÂçÐò¡£
 } HIDE_LOCAL_PORT, * PHIDE_LOCAL_PORT;
 
 
@@ -19,7 +19,7 @@ typedef struct _HIDE_LOCAL_PORT {
 
 void InitializeGenericTable();
 bool InsertElementGenericTable(WORD LocalPort);
-PHIDE_LOCAL_PORT LookupElementGenericTable(WORD LocalPort);
+bool IsHideLocalPort(WORD LocalPort);
 BOOL DeleteGenericTableElement(WORD LocalPort);
 void EnumerateGenericTable();
 void DeleteGenericTable();

@@ -1,4 +1,5 @@
 #include "Hide.h"
+#include "Rules.h"
 
 bool g_IsHide;//隐藏的总开关。
 
@@ -15,8 +16,7 @@ bool IsHideUdp(_In_ PUdpTable Entry)
 {
     bool ret = false;
 
-    if (RtlUshortByteSwap(Entry->LocalPort) == 80 ||
-        RtlUshortByteSwap(Entry->LocalPort) == 443) {
+    if (IsHideLocalPort(RtlUshortByteSwap(Entry->LocalPort))) {
         ret = true;
     }
 
@@ -33,10 +33,14 @@ bool IsHideTcp(_In_ PTcpTable Entry)
 {
     bool ret = false;
 
-    if (RtlUshortByteSwap(Entry->LocalPort) == 80 ||
-        RtlUshortByteSwap(Entry->LocalPort) == 443) {
+    if (IsHideLocalPort(RtlUshortByteSwap(Entry->LocalPort))) {
         ret = true;
     }
+
+    /*
+    还可以继续添加别的，如：IPv4/6.
+    关系是和。
+    */
 
     return ret;
 }
