@@ -79,6 +79,16 @@ bool InsertElementGenericTable(WORD LocalPort)
     BOOLEAN NewElement = FALSE;
     KIRQL oldIrql;
     bool ret = false;
+    ULONG NumberGenericTableElements = 0;
+
+    KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
+    NumberGenericTableElements = RtlNumberGenericTableElements(&g_LocalPortTable);
+    KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
+
+    if (NumberGenericTableElements > MAX_LOCAL_PORTS) {
+
+        return ret;
+    }
 
     PHIDE_LOCAL_PORT Element = (PHIDE_LOCAL_PORT)ExAllocateFromNPagedLookasideList(&g_LocalPortLookaside);
     if (!Element) {
