@@ -2,6 +2,7 @@
 //
 
 #include "pch.h"
+#include "Communication.h"
 
 
 void banner()
@@ -59,9 +60,9 @@ int _cdecl wmain(_In_ int argc, _In_reads_(argc) TCHAR * argv[])
         } else if (lstrcmpi(argv[1], TEXT("StartDriver")) == 0) {
             //ret = StartDriver();
         } else if (lstrcmpi(argv[1], TEXT("StartHide")) == 0) {
-            //ret = StartHide();
+            ret = StartHide();
         } else if (lstrcmpi(argv[1], TEXT("StopHide")) == 0) {
-            //ret = StopHide();
+            ret = StopHide();
         } else if (lstrcmpi(argv[1], TEXT("StopDriver")) == 0) {
             //ret = StopDriver();
         } else if (lstrcmpi(argv[1], TEXT("UnInstallDriver")) == 0) {
@@ -74,17 +75,17 @@ int _cdecl wmain(_In_ int argc, _In_reads_(argc) TCHAR * argv[])
     case 3:
     {
         if (lstrcmpi(argv[1], TEXT("HidePort")) == 0) {
-            //ret = HidePort(argv[2]);
+            ret = HidePort(argv[2]);
         } else if (lstrcmpi(argv[1], TEXT("HideIPv4")) == 0) {
-            //ret = HideIPv4(argv[2]);
+            ret = HideIPv4(argv[2]);
         } else if (lstrcmpi(argv[1], TEXT("HideIPv6")) == 0) {
-            //ret = HideIPv6(argv[2]);
+            ret = HideIPv6(argv[2]);
         } else if (lstrcmpi(argv[1], TEXT("RemovePort")) == 0) {
-            //ret = RemovePort(argv[2]);
+            ret = RemovePort(argv[2]);
         } else if (lstrcmpi(argv[1], TEXT("RemoveIPv4")) == 0) {
-            //ret = RemoveIPv4(argv[2]);
+            ret = RemoveIPv4(argv[2]);
         } else if (lstrcmpi(argv[1], TEXT("RemoveIPv6")) == 0) {
-            //ret = RemoveIPv6(argv[2]);
+            ret = RemoveIPv6(argv[2]);
         } else {
             Usage(argv[0]);
         }

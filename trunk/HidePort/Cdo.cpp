@@ -52,7 +52,7 @@ NTSTATUS SetLocalPort(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 
     UNREFERENCED_PARAMETER(DeviceObject);
 
-    if (inBufLength != sizeof(HIDE_SWITCH)) {
+    if (inBufLength != sizeof(LOCAL_PORT)) {
 
         return STATUS_UNSUCCESSFUL;
     }
@@ -83,7 +83,7 @@ NTSTATUS SetRemoteIp(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 
     UNREFERENCED_PARAMETER(DeviceObject);
 
-    if (inBufLength != sizeof(HIDE_SWITCH)) {
+    if (inBufLength != sizeof(REMOTE_IP)) {
 
         return STATUS_UNSUCCESSFUL;
     }

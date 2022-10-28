@@ -3,6 +3,7 @@
 
 #define DOS_DEVICE_NAME       L"\\DosDevices\\HideNsiInfo" 
 #define DEVICE_NAME           L"\\Device\\HideNsiInfo" 
+#define HIDE_NSI_INFO         L"\\\\.\\HideNsiInfo"
 
 
 typedef struct _HIDE_SWITCH {
@@ -20,11 +21,11 @@ typedef struct _REMOTE_IP
 {
     bool IsRemove;
     bool IsIPv6;
-    union IP
+    union
     {
         IN_ADDR IPv4;//利大會
         IN6_ADDR IPv6;//利大會
-    };    
+    }IP;
 } REMOTE_IP, * PREMOTE_IP;
 
 

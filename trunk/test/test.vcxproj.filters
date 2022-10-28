@@ -21,12 +21,18 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Communication.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\common\public.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Communication.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
