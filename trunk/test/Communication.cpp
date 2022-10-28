@@ -81,7 +81,7 @@ DWORD SetLocalPort(bool IsRemove, PWSTR LocalPortStr)
     Temp.IsRemove = IsRemove;
     Temp.LocalPort = (WORD)LocalPort;
 
-    LastError = DeviceIoControlCode(IOCTL_HIDE, &Temp, sizeof(LOCAL_PORT), nullptr, 0);
+    LastError = DeviceIoControlCode(IOCTL_SET_LOCALPORT, &Temp, sizeof(LOCAL_PORT), nullptr, 0);
 
     return LastError;
 }
@@ -110,7 +110,7 @@ DWORD SetRemoteIp(bool IsRemove, bool IsIPv6, PWSTR IpStr)
         Temp.IP.IPv4.S_un.S_addr = IPv4.S_un.S_addr;
     }
 
-    LastError = DeviceIoControlCode(IOCTL_HIDE, &Temp, sizeof(REMOTE_IP), nullptr, 0);
+    LastError = DeviceIoControlCode(IOCTL_SET_REMOTEIP, &Temp, sizeof(REMOTE_IP), nullptr, 0);
 
     return LastError;
 }
