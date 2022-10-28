@@ -13,11 +13,11 @@ PDEVICE_OBJECT g_DeviceObject;//  一个常用的，普通的，控制设备对象。
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-NTSTATUS SetGlobalSwitch (PDEVICE_OBJECT DeviceObject, PIRP Irp)
+NTSTATUS SetGlobalSwitch(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
     NTSTATUS Status = STATUS_SUCCESS;
-    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp); 
-    ULONG inBufLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;  
+    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp);
+    ULONG inBufLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;
     //ULONG outBufLength = irpSp->Parameters.DeviceIoControl.OutputBufferLength;  
     PHIDE_SWITCH inBuf = (PHIDE_SWITCH)Irp->AssociatedIrp.SystemBuffer;
     //PCHAR outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
@@ -63,10 +63,10 @@ NTSTATUS SetLocalPort(PDEVICE_OBJECT DeviceObject, PIRP Irp)
     }
 
     if (inBuf->IsRemove) {
-        IsOk = InsertElementGenericTable(inBuf->LocalPort);
-    } else {
         IsOk = DeleteGenericTableElement(inBuf->LocalPort);
-    }    
+    } else {
+        IsOk = InsertElementGenericTable(inBuf->LocalPort);
+    }
 
     return IsOk ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
 }
@@ -163,7 +163,7 @@ NTSTATUS ControlDeviceObjectMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObj
 
 NTSTATUS DeleteControlDeviceObject()
 {
-    NTSTATUS Status = STATUS_SUCCESS;    
+    NTSTATUS Status = STATUS_SUCCESS;
 
     Status = IoDeleteSymbolicLink(&g_SymbolicLinkName);
     if (!NT_SUCCESS(Status)) {
@@ -179,7 +179,7 @@ NTSTATUS DeleteControlDeviceObject()
 NTSTATUS CreateControlDeviceObject(_In_ PDRIVER_OBJECT DriverObject)
 {
     NTSTATUS Status = STATUS_SUCCESS;
-    PDEVICE_EXTENSION DevExt = NULL;    
+    PDEVICE_EXTENSION DevExt = NULL;
 
     Status = IoCreateDevice(DriverObject,
                             sizeof(DEVICE_EXTENSION),
