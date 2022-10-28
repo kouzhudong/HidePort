@@ -1,5 +1,7 @@
 #include "Cdo.h"
 #include "Attach.h"
+#include "Hide.h"
+#include "Rules.h"
 
 
 UNICODE_STRING g_SymbolicLinkName = RTL_CONSTANT_STRING(DOS_DEVICE_NAME);
@@ -11,8 +13,117 @@ PDEVICE_OBJECT g_DeviceObject;//  一个常用的，普通的，控制设备对象。
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+NTSTATUS SetGlobalSwitch (PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp); 
+    ULONG inBufLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;  
+    //ULONG outBufLength = irpSp->Parameters.DeviceIoControl.OutputBufferLength;  
+    PHIDE_SWITCH inBuf = (PHIDE_SWITCH)Irp->AssociatedIrp.SystemBuffer;
+    //PCHAR outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
+
+    UNREFERENCED_PARAMETER(DeviceObject);
+
+    if (inBufLength != sizeof(HIDE_SWITCH)) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    if (nullptr == inBuf) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    g_IsHide = inBuf->IsHide;//建议原子操作加异常处理。
+
+    return Status;
+}
 
 
+NTSTATUS SetLocalPort(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    //NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp);
+    ULONG inBufLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;
+    //ULONG outBufLength = irpSp->Parameters.DeviceIoControl.OutputBufferLength;  
+    PLOCAL_PORT inBuf = (PLOCAL_PORT)Irp->AssociatedIrp.SystemBuffer;
+    //PCHAR outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
+    bool IsOk = false;
+
+    UNREFERENCED_PARAMETER(DeviceObject);
+
+    if (inBufLength != sizeof(HIDE_SWITCH)) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    if (nullptr == inBuf) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    if (inBuf->IsRemove) {
+        IsOk = InsertElementGenericTable(inBuf->LocalPort);
+    } else {
+        IsOk = DeleteGenericTableElement(inBuf->LocalPort);
+    }    
+
+    return IsOk ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+}
+
+
+NTSTATUS SetRemoteIp(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp);
+    ULONG inBufLength = irpSp->Parameters.DeviceIoControl.InputBufferLength;
+    //ULONG outBufLength = irpSp->Parameters.DeviceIoControl.OutputBufferLength;  
+    PLOCAL_PORT inBuf = (PLOCAL_PORT)Irp->AssociatedIrp.SystemBuffer;
+    //PCHAR outBuf = (PCHAR)Irp->AssociatedIrp.SystemBuffer;
+
+    UNREFERENCED_PARAMETER(DeviceObject);
+
+    if (inBufLength != sizeof(HIDE_SWITCH)) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    if (nullptr == inBuf) {
+
+        return STATUS_UNSUCCESSFUL;
+    }
+
+    if (inBuf->IsRemove) {
+
+    } else {
+
+    }
+
+    return Status;
+}
+
+
+NTSTATUS DeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS Status = STATUS_SUCCESS;
+    PIO_STACK_LOCATION  irpSp = IoGetCurrentIrpStackLocation(Irp);
+
+    switch (irpSp->Parameters.DeviceIoControl.IoControlCode) {
+    case IOCTL_HIDE:
+        Status = SetGlobalSwitch(DeviceObject, Irp);
+        break;
+    case IOCTL_SET_LOCALPORT:
+        Status = SetLocalPort(DeviceObject, Irp);
+        break;
+    case IOCTL_SET_REMOTEIP:
+        Status = SetRemoteIp(DeviceObject, Irp);
+        break;
+    default:
+        break;
+    }
+
+    return Status;
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +141,13 @@ NTSTATUS ControlDeviceObjectMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObj
 
     switch (IrpStack->MajorFunction) {
     case IRP_MJ_CREATE:
-
+        break;
+    case IRP_MJ_CLEANUP:
+        break;
+    case IRP_MJ_CLOSE:
+        break;
+    case IRP_MJ_DEVICE_CONTROL:
+        Status = DeviceControl(DeviceObject, Irp);
         break;
     default:
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL, "Warning: MajorFunction: %d, IrpName: %s",

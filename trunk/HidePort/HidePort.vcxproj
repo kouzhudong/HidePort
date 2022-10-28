@@ -172,6 +172,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\public.h" />
     <ClInclude Include="Attach.h" />
     <ClInclude Include="Cdo.h" />
     <ClInclude Include="DriverEntry.h" />

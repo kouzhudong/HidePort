@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Pch.h"
-
-
-#define DOS_DEVICE_NAME       L"\\DosDevices\\HideNsiInfo" 
-#define DEVICE_NAME           L"\\Device\\HideNsiInfo" 
+#include "..\common\public.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

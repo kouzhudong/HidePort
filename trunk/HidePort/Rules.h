@@ -11,7 +11,7 @@ typedef struct _HIDE_LOCAL_PORT {
 } HIDE_LOCAL_PORT, * PHIDE_LOCAL_PORT;
 
 
-#define MAX_LOCAL_PORTS 999 //隐藏端口支持的个数。
+#define MAX_LOCAL_PORTS 99 //隐藏端口支持的个数。
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ typedef struct _HIDE_LOCAL_PORT {
 void InitializeGenericTable();
 bool InsertElementGenericTable(WORD LocalPort);
 bool IsHideLocalPort(WORD LocalPort);
-BOOL DeleteGenericTableElement(WORD LocalPort);
+bool DeleteGenericTableElement(WORD LocalPort);
 void EnumerateGenericTable();
 void DeleteGenericTable();
 

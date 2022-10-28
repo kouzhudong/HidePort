@@ -126,13 +126,13 @@ bool IsHideLocalPort(WORD LocalPort)
 }
 
 
-BOOL DeleteGenericTableElement(WORD LocalPort)
+bool DeleteGenericTableElement(WORD LocalPort)
 /*
 ”√∑®£∫
 */
 {
     PVOID Temp = NULL;
-    BOOL B = FALSE;
+    bool B = FALSE;
     KIRQL oldIrql;
     HIDE_LOCAL_PORT Element{};
 
