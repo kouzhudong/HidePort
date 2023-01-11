@@ -20,10 +20,10 @@ NTSTATUS GlobalMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ 
         Status = NsiMajorFunction(DeviceObject, Irp);
         break;
     case MY_CDO_DEVICE_TAG:
-        return ControlDeviceObjectMajorFunction(DeviceObject, Irp);//Ö±½Ó·µ»Ø£¬²»ÄÜ×ßÏÂÃæ¡£
+        return ControlDeviceObjectMajorFunction(DeviceObject, Irp);//ç›´æ¥è¿”å›ï¼Œä¸èƒ½èµ°ä¸‹é¢ã€‚
         break;
     default:
-        ASSERTMSG((PSTR)"·Ç·¨µÄÉè±¸²Ù×÷", FALSE);
+        ASSERTMSG((PSTR)"éæ³•çš„è®¾å¤‡æ“ä½œ", FALSE);
         break;
     }
     
