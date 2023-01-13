@@ -7,11 +7,11 @@
 
 
 typedef struct _HIDE_LOCAL_PORT {
-    WORD LocalPort;//�����򣬷�������
+    WORD LocalPort;//本地序，非网络序。
 } HIDE_LOCAL_PORT, * PHIDE_LOCAL_PORT;
 
 
-#define MAX_LOCAL_PORTS 99 //���ض˿�֧�ֵĸ�����
+#define MAX_LOCAL_PORTS 99 //隐藏端口支持的个数。
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

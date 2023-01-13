@@ -6,13 +6,13 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-//Ò»Ğ©ÏµÍ³µÄÍ·ÎÄ¼şºÍ¿âµÄ°üº¬¡£
+//ä¸€äº›ç³»ç»Ÿçš„å¤´æ–‡ä»¶å’Œåº“çš„åŒ…å«ã€‚
 
 
 //#define _WIN32_WINNT 0x0501
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define WIN32_LEAN_AND_MEAN // ´Ó Windows Í·ÎÄ¼şÖĞÅÅ³ı¼«ÉÙÊ¹ÓÃµÄÄÚÈİ
+#define WIN32_LEAN_AND_MEAN // ä» Windows å¤´æ–‡ä»¶ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„å†…å®¹
 //#define INITGUID
 
 #ifndef UNICODE
@@ -65,7 +65,7 @@
 #include <comutil.h>
 #include <wbemidl.h>
 #include <dbt.h>
-#include <lm.h> //ÄÚº¬lmaccess.h¡£
+#include <lm.h> //å†…å«lmaccess.hã€‚
 #include <winnetwk.h>
 #include <ws2spi.h>
 #include <comdef.h>
@@ -96,7 +96,7 @@
 //#include <..\km\tdistat.h>
 #include "tcpioctl.h"
 
-#include <initguid.h> //×¢ÒâÇ°ºóË³Ğò¡£¾²Ì¬¶¨ÒåUUIDÓÃµÄ£¬·ñÔò£ºerror LNK2001¡£
+#include <initguid.h> //æ³¨æ„å‰åé¡ºåºã€‚é™æ€å®šä¹‰UUIDç”¨çš„ï¼Œå¦åˆ™ï¼šerror LNK2001ã€‚
 #include <usbioctl.h>
 #include <usbiodef.h>
 //#include <usbctypes.h>
@@ -173,7 +173,7 @@
 #include <Sensapi.h>
 #pragma comment (lib,"Sensapi.lib")
 
-#include <Winhttp.h> //Winhttp.hÓëWininet.h²»ÄÜ°üº¬ÔÚÍ¬Ò»¸öÎÄ¼şÖĞ±àÒë£¬ÇÒ½¨Òé²»ÒªÔÚÍ·ÎÄ¼şÀïÒıÓÃ¡£
+#include <Winhttp.h> //Winhttp.hä¸Wininet.hä¸èƒ½åŒ…å«åœ¨åŒä¸€ä¸ªæ–‡ä»¶ä¸­ç¼–è¯‘ï¼Œä¸”å»ºè®®ä¸è¦åœ¨å¤´æ–‡ä»¶é‡Œå¼•ç”¨ã€‚
 #pragma comment(lib, "Winhttp.lib")
 
 #include <string>

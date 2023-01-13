@@ -8,7 +8,7 @@
 
 
 #pragma pack(1)
-typedef struct _StateTable //TcpÌØÓĞ£¬UdpÃ»ÓĞ¡£
+typedef struct _StateTable //Tcpç‰¹æœ‰ï¼ŒUdpæ²¡æœ‰ã€‚
 {
     MIB_TCP_STATE State;
     int field_4;
@@ -21,7 +21,7 @@ static_assert(sizeof(StateTable) == 0x10);
 
 
 typedef __declspec(align(32)) struct _ProcessTable
-//ÕâÀïÓ¦¸Ã»¹ÓĞÂ·¾¶ĞÅÏ¢¡£
+//è¿™é‡Œåº”è¯¥è¿˜æœ‰è·¯å¾„ä¿¡æ¯ã€‚
 {
     SIZE_T field_0;
     int field_8;
@@ -36,7 +36,7 @@ static_assert(sizeof(ProcessTable) == 0x20);
 #pragma pack(1)
 typedef struct _UdpTable
 {
-    //ÕâËÄ¸ö³ÉÔ±Ó¦¸ÃÊÇSOCKADDR¡£
+    //è¿™å››ä¸ªæˆå‘˜åº”è¯¥æ˜¯SOCKADDRã€‚
     WORD LocalFamily;
     WORD LocalPort;
     IN_ADDR LocalAddrV4;
@@ -52,7 +52,7 @@ static_assert(sizeof(UdpTable) == 0x1C);
 #pragma pack(1)
 typedef struct _TcpTable
 {
-    //ÕâËÄ¸ö³ÉÔ±Ó¦¸ÃÊÇSOCKADDR¡£
+    //è¿™å››ä¸ªæˆå‘˜åº”è¯¥æ˜¯SOCKADDRã€‚
     WORD LocalFamily;
     WORD LocalPort;
     IN_ADDR LocalAddrV4;
@@ -60,7 +60,7 @@ typedef struct _TcpTable
 
     DWORD LocalScopeId;
 
-    WORD RemoteFamily;//Õâ¸öÊÇ²Â²âµÄ£¬¾­¹Û²ìºÍLocalFamilyÒ»Ñù¡£
+    WORD RemoteFamily;//è¿™ä¸ªæ˜¯çŒœæµ‹çš„ï¼Œç»è§‚å¯Ÿå’ŒLocalFamilyä¸€æ ·ã€‚
     WORD RemotePort;
     IN_ADDR RemoteAddrV4;
     IN6_ADDR RemoteAddrV6;
@@ -84,16 +84,16 @@ typedef struct _NsiParameters //__declspec(align(16))
     LARGE_INTEGER Flag2;
 
     PVOID p1;
-    SIZE_T size1;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
+    SIZE_T size1;//ä¸æ˜¯å†…å­˜çš„å¤§å°ï¼Œåº”è¯¥æ˜¯æ•°ç»„çš„å…ƒç´ çš„å¤§å°ã€‚
 
     PVOID p2;
-    SIZE_T size2;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
+    SIZE_T size2;//ä¸æ˜¯å†…å­˜çš„å¤§å°ï¼Œåº”è¯¥æ˜¯æ•°ç»„çš„å…ƒç´ çš„å¤§å°ã€‚
 
     PVOID StateInfo;
-    SIZE_T size3;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
+    SIZE_T size3;//ä¸æ˜¯å†…å­˜çš„å¤§å°ï¼Œåº”è¯¥æ˜¯æ•°ç»„çš„å…ƒç´ çš„å¤§å°ã€‚
 
     PVOID ProcessInfo;
-    SIZE_T size4;//²»ÊÇÄÚ´æµÄ´óĞ¡£¬Ó¦¸ÃÊÇÊı×éµÄÔªËØµÄ´óĞ¡¡£
+    SIZE_T size4;//ä¸æ˜¯å†…å­˜çš„å¤§å°ï¼Œåº”è¯¥æ˜¯æ•°ç»„çš„å…ƒç´ çš„å¤§å°ã€‚
 
     SIZE_T Counter;
 }NsiParameters, * PNsiParameters;
@@ -101,7 +101,7 @@ typedef struct _NsiParameters //__declspec(align(16))
 
 
 #if defined(_WIN64)
-static_assert(sizeof(NsiParameters) == 0x70);//ÓïÑÔ¹¦ÄÜ "¼òÒª¾²Ì¬¶ÏÑÔ" ĞèÒª±àÒëÆ÷±êÖ¾ "/std:c++17"
+static_assert(sizeof(NsiParameters) == 0x70);//è¯­è¨€åŠŸèƒ½ "ç®€è¦é™æ€æ–­è¨€" éœ€è¦ç¼–è¯‘å™¨æ ‡å¿— "/std:c++17"
 #else 
 static_assert(sizeof(NsiParameters) == 0x3C);
 #endif

@@ -119,14 +119,14 @@ https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ns-tcpmib-mib_tcp6row
 
 void DumpTcpEntry(_In_ PTcpTable Table)
 /*
-Õâ¸ö½á¹¹Àï°üº¬£º
+è¿™ä¸ªç»“æž„é‡ŒåŒ…å«ï¼š
 LocalAddr
 dwLocalScopeId
 dwLocalPort
 RemoteAddr
 dwRemoteScopeId
 dwRemotePort
-µÈ¡£
+ç­‰ã€‚
 */
 {
     CHAR LocalIp[MAX_ADDRESS_STRING_LENGTH] = {0};
@@ -222,7 +222,7 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
 
     Status = IoAcquireRemoveLock(&DevExt->RemoveLock, Irp);
     if (!NT_SUCCESS(Status)) {//STATUS_DELETE_PENDING
-        //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);//ÐÅÏ¢Ì«¶à¡£
+        //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);//ä¿¡æ¯å¤ªå¤šã€‚
         IsReleaseRemoveLock = false;
     }
 
@@ -232,18 +232,18 @@ NTSTATUS DefaultMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_
         IoCopyCurrentIrpStackLocationToNext(Irp);
     }
 
-    Status = IoCallDriver(DevExt->AttachedDevice, Irp);//Õâ¸öº¯ÊýÖ®ºó½ûÖ¹·ÃÎÊIrpStackµÈÐÅÏ¢¡£
+    Status = IoCallDriver(DevExt->AttachedDevice, Irp);//è¿™ä¸ªå‡½æ•°ä¹‹åŽç¦æ­¢è®¿é—®IrpStackç­‰ä¿¡æ¯ã€‚
 
     if (IsReleaseRemoveLock) {
         IoReleaseRemoveLockAndWait(&DevExt->RemoveLock, Irp);
     }
 
-    if (!NT_SUCCESS(Status)) {//ÕâÀïÊ§°ÜÊÇºÜÕý³£µÄ¡£
+    if (!NT_SUCCESS(Status)) {//è¿™é‡Œå¤±è´¥æ˜¯å¾ˆæ­£å¸¸çš„ã€‚
         //PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "Warning: IrpName: %s, Status:%#x",
         //        FltGetIrpName(MajorFunction), Status);
     }
 
-    if (STATUS_PENDING == Status) {//¿ÉÒÔ¿¼ÂÇ°ÑÕâ¸öIRP±£´æµ½Á´±í£¬ÔÚºóÃæ£¬Èç£ºÐ¶ÔØµÄÊ±ºòÔÙ´¦Àí£¬Èç£ºIoCancelIrp.
+    if (STATUS_PENDING == Status) {//å¯ä»¥è€ƒè™‘æŠŠè¿™ä¸ªIRPä¿å­˜åˆ°é“¾è¡¨ï¼Œåœ¨åŽé¢ï¼Œå¦‚ï¼šå¸è½½çš„æ—¶å€™å†å¤„ç†ï¼Œå¦‚ï¼šIoCancelIrp.
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_WARNING_LEVEL, "Warning: Pending Irp:%p, IrpName: %s", 
                 Irp, FltGetIrpName(MajorFunction));
     }
@@ -289,15 +289,15 @@ void EnumUdpTable(_In_ PNsiParameters NsiParam)
         }
     }
 
-    if (NsiParam->p2) {//½ö½ö´òÓ¡ÐÅÏ¢£º¾­¹Û²ìºÍ²âÊÔ£¬·¢ÏÖÕâ¸öÖµ´ó¶àÊÇ0¡£
+    if (NsiParam->p2) {//ä»…ä»…æ‰“å°ä¿¡æ¯ï¼šç»è§‚å¯Ÿå’Œæµ‹è¯•ï¼Œå‘çŽ°è¿™ä¸ªå€¼å¤§å¤šæ˜¯0ã€‚
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
-    if (NsiParam->StateInfo) {//½ö½ö´òÓ¡ÐÅÏ¢£º¾­¹Û²ìºÍ²âÊÔ£¬·¢ÏÖÕâ¸öÖµ´ó¶àÊÇ0¡£
+    if (NsiParam->StateInfo) {//ä»…ä»…æ‰“å°ä¿¡æ¯ï¼šç»è§‚å¯Ÿå’Œæµ‹è¯•ï¼Œå‘çŽ°è¿™ä¸ªå€¼å¤§å¤šæ˜¯0ã€‚
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
-    if (NsiParam->ProcessInfo) {//½ö½ö´òÓ¡ÐÅÏ¢£º¾­¹Û²ìºÍ²âÊÔ£¬·¢ÏÖÕâ¸öÖµ´ó¶àÊÇ0x20¡£
+    if (NsiParam->ProcessInfo) {//ä»…ä»…æ‰“å°ä¿¡æ¯ï¼šç»è§‚å¯Ÿå’Œæµ‹è¯•ï¼Œå‘çŽ°è¿™ä¸ªå€¼å¤§å¤šæ˜¯0x20ã€‚
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size4: %d", (int)NsiParam->size4);
     }
 }
@@ -320,8 +320,8 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
     PProcessTable Module = (PProcessTable)NsiParam->ProcessInfo;
 
     for (ULONG i = 0; i < NsiParam->Counter; i++) {
-        if (NsiParam->p1) {//Õâ¸öÊÇÉ¶½á¹¹ÄØ£¿¿ÉÒÔ·ÖÎöGetTcp6Table2¡£
-            //ASSERT(NsiParam->size1 == 0x38);//¿ÉÒÔ¿Ï¶¨Õâ¸ö½á¹¹µÄ´óÐ¡ÊÇ0x38¡£
+        if (NsiParam->p1) {//è¿™ä¸ªæ˜¯å•¥ç»“æž„å‘¢ï¼Ÿå¯ä»¥åˆ†æžGetTcp6Table2ã€‚
+            //ASSERT(NsiParam->size1 == 0x38);//å¯ä»¥è‚¯å®šè¿™ä¸ªç»“æž„çš„å¤§å°æ˜¯0x38ã€‚
             DumpTcpEntry(Table);
             Table++;
         }
@@ -341,19 +341,19 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
         }
     }   
 
-    if (NsiParam->p2) {//Õâ¸öÊÇÉ¶½á¹¹ÄØ£¿¿ÉÒÔ·ÖÎöGetTcp6Table2¡£
+    if (NsiParam->p2) {//è¿™ä¸ªæ˜¯å•¥ç»“æž„å‘¢ï¼Ÿå¯ä»¥åˆ†æžGetTcp6Table2ã€‚
         /*
-        Õâ¸ö½á¹¹µÄÖ¸Õë´ó¶àÎªNULL¡£
+        è¿™ä¸ªç»“æž„çš„æŒ‡é’ˆå¤§å¤šä¸ºNULLã€‚
         */
 
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size2: %d", (int)NsiParam->size2);
     }
 
-    if (NsiParam->StateInfo) {//Õâ¸öÊÇÉ¶½á¹¹ÄØ£¿¿ÉÒÔ·ÖÎöGetTcp6Table2¡£
+    if (NsiParam->StateInfo) {//è¿™ä¸ªæ˜¯å•¥ç»“æž„å‘¢ï¼Ÿå¯ä»¥åˆ†æžGetTcp6Table2ã€‚
         /*
-        ¾­²âÊÔ£¬Õâ¸ö½á¹¹µÄ´óÐ¡ÊÇ0x10.
+        ç»æµ‹è¯•ï¼Œè¿™ä¸ªç»“æž„çš„å¤§å°æ˜¯0x10.
 
-        Õâ¸ö½á¹¹Àï°üº¬£º
+        è¿™ä¸ªç»“æž„é‡ŒåŒ…å«ï¼š
         State
         dwOffloadState
 
@@ -362,11 +362,11 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
         PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_INFO_LEVEL, "size3: %d", (int)NsiParam->size3);
     }
 
-    if (NsiParam->ProcessInfo) {//Õâ¸öÊÇÉ¶½á¹¹ÄØ£¿¿ÉÒÔ·ÖÎöGetTcp6Table2¡£
+    if (NsiParam->ProcessInfo) {//è¿™ä¸ªæ˜¯å•¥ç»“æž„å‘¢ï¼Ÿå¯ä»¥åˆ†æžGetTcp6Table2ã€‚
         /*
-        ¾­²âÊÔ£¬Õâ¸ö½á¹¹µÄ´óÐ¡ÊÇ0x20.
+        ç»æµ‹è¯•ï¼Œè¿™ä¸ªç»“æž„çš„å¤§å°æ˜¯0x20.
 
-        Õâ¸ö½á¹¹Àï°üº¬£º
+        è¿™ä¸ªç»“æž„é‡ŒåŒ…å«ï¼š
         dwOwningPid
 
         */
@@ -378,27 +378,27 @@ void EnumTcpTable(_In_ PNsiParameters NsiParam)
 
 NTSTATUS EnumerateObjectsAllParameters(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
-¹¦ÄÜ£ºÒþ²Ø¶Ë¿Ú¡£
+åŠŸèƒ½ï¼šéšè—ç«¯å£ã€‚
 
-×ö·¨£ºÕª³ýÐèÒªÖ¸¶¨Õª³ýµÄÐÅÏ¢¡£
+åšæ³•ï¼šæ‘˜é™¤éœ€è¦æŒ‡å®šæ‘˜é™¤çš„ä¿¡æ¯ã€‚
 
-ÖØµã£ºInputBufferµÄ½á¹¹ÀàÐÍ¡£
+é‡ç‚¹ï¼šInputBufferçš„ç»“æž„ç±»åž‹ã€‚
 
-´Û¸ÄÊ±»ú£ºIoCallDriverÖ®ºó¡£
+ç¯¡æ”¹æ—¶æœºï¼šIoCallDriverä¹‹åŽã€‚
 
-InputBufferLength£º²»Ð¡ÓÚ0x3C£¬Ò²²»Ð¡ÓÚ0x70¡£¾­¹Û²ì¶¼ÊÇ0x70¡£
+InputBufferLengthï¼šä¸å°äºŽ0x3Cï¼Œä¹Ÿä¸å°äºŽ0x70ã€‚ç»è§‚å¯Ÿéƒ½æ˜¯0x70ã€‚
 
-²Ù×÷ÏµÍ³µÄº¯ÊýÔ­ÐÍ£º
+æ“ä½œç³»ç»Ÿçš„å‡½æ•°åŽŸåž‹ï¼š
 //NTSTATUS NsippEnumerateObjectsAllParameters(PVOID InputBuffer,
 //                                            SIZE_T Length,
 //                                            KPROCESSOR_MODE RequestorMode,
 //                                            PULONG_PTR Information)
 
-²Ù×÷ÏµÍ³µÄÓÃ·¨£º
+æ“ä½œç³»ç»Ÿçš„ç”¨æ³•ï¼š
 NsippEnumerateObjectsAllParameters(Type3InputBuffer, 
                                    (SIZE_T)InputBufferLength, RequestorMode, &Irp->IoStatus.Information);
 
-²Î¿¼£ºhttps://github.com/claudiouzelac/rootkit.com/blob/c8869de5a947273c9c151b44aa39643a7fea531c/cardmagic/PortHidDemo_Vista.c
+å‚è€ƒï¼šhttps://github.com/claudiouzelac/rootkit.com/blob/c8869de5a947273c9c151b44aa39643a7fea531c/cardmagic/PortHidDemo_Vista.c
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
@@ -412,7 +412,7 @@ NsippEnumerateObjectsAllParameters(Type3InputBuffer,
     DBG_UNREFERENCED_LOCAL_VARIABLE(outBufLength);
     DBG_UNREFERENCED_LOCAL_VARIABLE(RequestorMode);
 
-    {//²âÊÔ£¬½â¾ö£¬·ÖÎö£¬¶¨Î»ÎÊÌâµÄ¸¨Öú´úÂë¡£
+    {//æµ‹è¯•ï¼Œè§£å†³ï¼Œåˆ†æžï¼Œå®šä½é—®é¢˜çš„è¾…åŠ©ä»£ç ã€‚
         __try {
             PNsiParameters NsiParam = (PNsiParameters)Type3InputBuffer;
             PNPI_MODULEID ModuleId = NsiParam->ModuleId;
@@ -427,7 +427,7 @@ NsippEnumerateObjectsAllParameters(Type3InputBuffer,
 
     Status = DefaultMajorFunction(DeviceObject, Irp);
     if (!NT_SUCCESS(Status)) {
-        return Status;//´ó¶àÊÇSTATUS_MORE_ENTRIES£¬¶ø²»ÊÇ¹ÒÆð×´Ì¬£ºSTATUS_PENDING¡£
+        return Status;//å¤§å¤šæ˜¯STATUS_MORE_ENTRIESï¼Œè€Œä¸æ˜¯æŒ‚èµ·çŠ¶æ€ï¼šSTATUS_PENDINGã€‚
     }
 
     //if (STATUS_SUCCESS != Status) {
@@ -466,9 +466,9 @@ NsippEnumerateObjectsAllParameters(Type3InputBuffer,
 
 NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
-×ö·¨²Î¿¼£ºnsiproxy!NsippDispatch.
+åšæ³•å‚è€ƒï¼šnsiproxy!NsippDispatch.
 
-»¹ÓÐ¸öº¯Êý½Ð£ºNsippDispatchDeviceControl¡£
+è¿˜æœ‰ä¸ªå‡½æ•°å«ï¼šNsippDispatchDeviceControlã€‚
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
@@ -526,7 +526,7 @@ NTSTATUS NsiDeviceControl(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
 
 NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIRP Irp)
 /*
-×ö·¨²Î¿¼£ºnsiproxy!NsippDispatch.
+åšæ³•å‚è€ƒï¼šnsiproxy!NsippDispatch.
 */
 {
     PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
@@ -555,7 +555,7 @@ NTSTATUS NsiMajorFunction(_In_ struct _DEVICE_OBJECT * DeviceObject, _Inout_ PIR
         break;
     }
 
-    //if (STATUS_ACCESS_DENIED == Status) {//×è¶ÏÏìÓ¦´¦Àí¡£        
+    //if (STATUS_ACCESS_DENIED == Status) {//é˜»æ–­å“åº”å¤„ç†ã€‚        
     //    Irp->IoStatus.Status = Status;
     //    Irp->IoStatus.Information = 0;
     //    IoCompleteRequest(Irp, IO_NO_INCREMENT);

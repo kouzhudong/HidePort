@@ -13,7 +13,7 @@ typedef struct _HIDE_SWITCH {
 
 typedef struct _LOCAL_PORT {
     bool IsRemove;
-    WORD LocalPort;//±¾µØÐò£¬·ÇÍøÂçÐò¡£
+    WORD LocalPort;//æœ¬åœ°åºï¼Œéžç½‘ç»œåºã€‚
 } LOCAL_PORT, * PLOCAL_PORT;
 
 
@@ -23,8 +23,8 @@ typedef struct _REMOTE_IP
     bool IsIPv6;
     union
     {
-        IN_ADDR IPv4;//ÍøÂçÐò
-        IN6_ADDR IPv6;//ÍøÂçÐò
+        IN_ADDR IPv4;//ç½‘ç»œåº
+        IN6_ADDR IPv6;//ç½‘ç»œåº
     }IP;
 } REMOTE_IP, * PREMOTE_IP;
 

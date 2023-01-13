@@ -7,7 +7,7 @@
 UNICODE_STRING g_SymbolicLinkName = RTL_CONSTANT_STRING(DOS_DEVICE_NAME);
 UNICODE_STRING g_DeviceName = RTL_CONSTANT_STRING(DEVICE_NAME);
 
-PDEVICE_OBJECT g_DeviceObject;//  Ò»¸ö³£ÓÃµÄ£¬ÆÕÍ¨µÄ£¬¿ØÖÆÉè±¸¶ÔÏó¡£
+PDEVICE_OBJECT g_DeviceObject;//  ä¸€ä¸ªå¸¸ç”¨çš„ï¼Œæ™®é€šçš„ï¼Œæ§åˆ¶è®¾å¤‡å¯¹è±¡ã€‚
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ NTSTATUS SetGlobalSwitch(PDEVICE_OBJECT DeviceObject, PIRP Irp)
         return STATUS_UNSUCCESSFUL;
     }
 
-    g_IsHide = inBuf->IsHide;//½¨ÒéÔ­×Ó²Ù×÷¼ÓÒì³£´¦Àí¡£
+    g_IsHide = inBuf->IsHide;//å»ºè®®åŸå­æ“ä½œåŠ å¼‚å¸¸å¤„ç†ã€‚
 
     return Status;
 }
@@ -194,8 +194,8 @@ NTSTATUS CreateControlDeviceObject(_In_ PDRIVER_OBJECT DriverObject)
     }
 
     DevExt = (PDEVICE_EXTENSION)g_DeviceObject->DeviceExtension;
-    DevExt->DeviceTag = MY_CDO_DEVICE_TAG;//ÓÃÓÚÍ¨Ñ¶µÄ¿ØÖÆÉè±¸µÄ±êÖ¾¡£ÓÃÓÚÇø±ğÆäËûµÄAttachDevice¡£
-    DevExt->AttachedDevice = NULL;//±¾Éè±¸²»ÓÃÓÚAttach¡£
+    DevExt->DeviceTag = MY_CDO_DEVICE_TAG;//ç”¨äºé€šè®¯çš„æ§åˆ¶è®¾å¤‡çš„æ ‡å¿—ã€‚ç”¨äºåŒºåˆ«å…¶ä»–çš„AttachDeviceã€‚
+    DevExt->AttachedDevice = NULL;//æœ¬è®¾å¤‡ä¸ç”¨äºAttachã€‚
 
     Status = IoCreateSymbolicLink(&g_SymbolicLinkName, &g_DeviceName);
     if (!NT_SUCCESS(Status)) {

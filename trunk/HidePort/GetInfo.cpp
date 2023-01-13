@@ -187,7 +187,7 @@ NTSTATUS GetTcpInfoByIrp(_In_ PNsiParameters NsiParam)
     //StackLocation->DeviceObject = DeviceObject;
     //Irp->RequestorMode = KernelMode;
     
-    Status = IoCallDriver(DeviceObject, Irp);//����STATUS_ACCESS_VIOLATION��
+    Status = IoCallDriver(DeviceObject, Irp);//依旧STATUS_ACCESS_VIOLATION。
     if (Status == STATUS_PENDING) {
         KeWaitForSingleObject(&EventObject, Executive, KernelMode, FALSE, NULL);
         Status = IoStatusBlock.Status;
@@ -338,13 +338,13 @@ NTSTATUS InitUdpNsiParam(_In_ PNsiParameters NsiParam)
 
 NTSTATUS EnumTcpTableX()
 /*
-���ܣ�ö��TCP��Ϣ��
+功能：枚举TCP信息。
 
-ע�ͣ�ʧ�ܵĺ�����ʧ�ܵ����֣��ڶ���IOȥ��ȡ��Ϣ��ʱ�򣬷���STATUS_ACCESS_VIOLATION��
+注释：失败的函数，失败的显现：第二次IO去获取信息的时候，返回STATUS_ACCESS_VIOLATION。
 
-�����취����һ�λ�ȡ�����͵ڶ��λ�ȡ�������Ϣ������ͬһ�������
+改正办法：第一次获取个数和第二次获取具体的信息，都用同一个句柄。
 
-�������ȷ�װ��ģ�黯Ҳ�Ǵ���
+看来过度封装和模块化也是错。
 */
 {
     NsiParameters NsiParam{};
@@ -367,7 +367,7 @@ NTSTATUS EnumTcpTableX()
         return Status;
     }
 
-    //���Կ��ǰ�NsiParametersת��ΪPMIB_TCPTABLE��
+    //可以考虑把NsiParameters转换为PMIB_TCPTABLE。
 
     EnumTcpTable(&NsiParam);
 
@@ -379,9 +379,9 @@ NTSTATUS EnumTcpTableX()
 
 NTSTATUS EnumTcpTable()
 /*
-���ܣ�ö��TCP��Ϣ��
+功能：枚举TCP信息。
 
-�мǣ���һ�λ�ȡ�����͵ڶ��λ�ȡ�������Ϣ����ͬһ����������򷵻�STATUS_ACCESS_VIOLATION��
+切记：第一次获取个数和第二次获取具体的信息都用同一个句柄，否则返回STATUS_ACCESS_VIOLATION。
 */
 {
     HANDLE FileHandle = nullptr;
@@ -475,7 +475,7 @@ NTSTATUS EnumTcpTable()
 
 NTSTATUS EnumUdpTable()
 /*
-���ܣ�ö��UDP��Ϣ��
+功能：枚举UDP信息。
 
 
 */

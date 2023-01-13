@@ -3,7 +3,7 @@
 
 NTSTATUS Detach(_In_ PDRIVER_OBJECT DriverObject)
 /*
-¹¦ÄÜ£º¶Ô±¾Çý¶¯µÄËùÓÐµÄAttachDevice½øÐÐDetachDevice²Ù×÷¡£
+åŠŸèƒ½ï¼šå¯¹æœ¬é©±åŠ¨çš„æ‰€æœ‰çš„AttachDeviceè¿›è¡ŒDetachDeviceæ“ä½œã€‚
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
@@ -15,7 +15,7 @@ NTSTATUS Detach(_In_ PDRIVER_OBJECT DriverObject)
     PreDeviceObject = DriverObject->DeviceObject;
     while (PreDeviceObject != NULL) {
         DevExt = (PDEVICE_EXTENSION)PreDeviceObject->DeviceExtension;
-        if (DevExt->AttachedDevice) { //È·±£±¾Çý¶¯´´½¨µÄÉè±¸¶¼°üº¬PFILTER_DEVICE_EXTENSION,Ã»ÓÐ¹ÒÔØµÄ°Ñ´ËÖµÉèÖÃÎª0.
+        if (DevExt->AttachedDevice) { //ç¡®ä¿æœ¬é©±åŠ¨åˆ›å»ºçš„è®¾å¤‡éƒ½åŒ…å«PFILTER_DEVICE_EXTENSION,æ²¡æœ‰æŒ‚è½½çš„æŠŠæ­¤å€¼è®¾ç½®ä¸º0.
             IoDetachDevice(DevExt->AttachedDevice);
         }
 
@@ -37,12 +37,12 @@ NTSTATUS AttachDevice(_In_ PDRIVER_OBJECT DriverObject,
                       _In_ ULONG Flag
 )
 /*
-¹¦ÄÜ:´´½¨Ò»¸ö(¹ýÂË)Éè±¸²¢¹ÒÔØµ½Ö¸¶¨µÄÉè±¸ÉÏ.
+åŠŸèƒ½:åˆ›å»ºä¸€ä¸ª(è¿‡æ»¤)è®¾å¤‡å¹¶æŒ‚è½½åˆ°æŒ‡å®šçš„è®¾å¤‡ä¸Š.
 
-²ÎÊýËµÃ÷:
-DeviceNameString ±»¹ÒÔØµÄÉè±¸µÄÃû×Ö.
-FilterDeviceName ´´½¨µÄ×Ô¼º¹ýÂËÉè±¸.
-Flag ´´½¨µÄ¹ýÂËÉè±¸µÄ±êÖ¾,ÔÚÉè±¸¶ÔÏóµÄÀ©Õ¹½á¹¹ÀïÃæ.
+å‚æ•°è¯´æ˜Ž:
+DeviceNameString è¢«æŒ‚è½½çš„è®¾å¤‡çš„åå­—.
+FilterDeviceName åˆ›å»ºçš„è‡ªå·±è¿‡æ»¤è®¾å¤‡.
+Flag åˆ›å»ºçš„è¿‡æ»¤è®¾å¤‡çš„æ ‡å¿—,åœ¨è®¾å¤‡å¯¹è±¡çš„æ‰©å±•ç»“æž„é‡Œé¢.
 */
 {
     NTSTATUS Status = STATUS_SUCCESS;
@@ -64,7 +64,7 @@ Flag ´´½¨µÄ¹ýÂËÉè±¸µÄ±êÖ¾,ÔÚÉè±¸¶ÔÏóµÄÀ©Õ¹½á¹¹ÀïÃæ.
         //}
 
         Status = IoGetDeviceObjectPointer(&ObjectName, FILE_ALL_ACCESS, &FileObject, &DeviceObject);
-        if (Status != STATUS_SUCCESS) {//INFÀï±ØÐëÉèÖÃÒÀÀµÏî£¬·ñÔòÕâ¼¸¸öÉè±¸Ã»´´½¨£¨STATUS_OBJECT_NAME_NOT_FOUND£©¡£
+        if (Status != STATUS_SUCCESS) {//INFé‡Œå¿…é¡»è®¾ç½®ä¾èµ–é¡¹ï¼Œå¦åˆ™è¿™å‡ ä¸ªè®¾å¤‡æ²¡åˆ›å»ºï¼ˆSTATUS_OBJECT_NAME_NOT_FOUNDï¼‰ã€‚
             PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             break;
         }
@@ -77,7 +77,7 @@ Flag ´´½¨µÄ¹ýÂËÉè±¸µÄ±êÖ¾,ÔÚÉè±¸¶ÔÏóµÄÀ©Õ¹½á¹¹ÀïÃæ.
                                 DeviceObject->DeviceType, 
                                 0, 
                                 FALSE, 
-                                &FilterDeviceObject);//¿ÉÒÔ¿¼ÂÇ±£´æÕâ¸öÖµµ½È«¾Ö±äÁ¿¡£
+                                &FilterDeviceObject);//å¯ä»¥è€ƒè™‘ä¿å­˜è¿™ä¸ªå€¼åˆ°å…¨å±€å˜é‡ã€‚
         if (!NT_SUCCESS(Status)) {
             PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             break;
@@ -85,7 +85,7 @@ Flag ´´½¨µÄ¹ýÂËÉè±¸µÄ±êÖ¾,ÔÚÉè±¸¶ÔÏóµÄÀ©Õ¹½á¹¹ÀïÃæ.
 
         ClearFlag(FilterDeviceObject->Flags, DO_DEVICE_INITIALIZING); //filterDeviceObject->Flags &= ~0x00000080;
 
-        Status = IoAttachDeviceToDeviceStackSafe(FilterDeviceObject, DeviceObject, &AttachedDevice);//·µ»Ø¸½¼ÓÇ°µÄ¶¥²ãÉè±¸¡£
+        Status = IoAttachDeviceToDeviceStackSafe(FilterDeviceObject, DeviceObject, &AttachedDevice);//è¿”å›žé™„åŠ å‰çš„é¡¶å±‚è®¾å¤‡ã€‚
         if (!NT_SUCCESS(Status)) {
             PrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "Error: Status:%#x", Status);
             IoDeleteDevice(FilterDeviceObject);
@@ -93,7 +93,7 @@ Flag ´´½¨µÄ¹ýÂËÉè±¸µÄ±êÖ¾,ÔÚÉè±¸¶ÔÏóµÄÀ©Õ¹½á¹¹ÀïÃæ.
         }
 
         DevExt = (PDEVICE_EXTENSION)FilterDeviceObject->DeviceExtension;
-        DevExt->AttachedDevice = AttachedDevice;//¿ÉÒÔ¿¼ÂÇ±£´æÕâ¸öÖµµ½È«¾Ö±äÁ¿£¬ÓÃÓÚDetachDevice¡£
+        DevExt->AttachedDevice = AttachedDevice;//å¯ä»¥è€ƒè™‘ä¿å­˜è¿™ä¸ªå€¼åˆ°å…¨å±€å˜é‡ï¼Œç”¨äºŽDetachDeviceã€‚
         DevExt->DeviceTag = Flag;
         IoInitializeRemoveLock(&DevExt->RemoveLock, TAG, 0, 0);
     } while (FALSE);

@@ -2,12 +2,12 @@
 
 
 #ifdef RTL_USE_AVL_TABLES
-RTL_AVL_TABLE g_LocalPortTable = {0}; //±àÒëÊ±RtlInitializeGenericTableµÚÒ»¸ö²ÎÊıÀàĞÍ²»¶Ô¡£
+RTL_AVL_TABLE g_LocalPortTable = {0}; //ç¼–è¯‘æ—¶RtlInitializeGenericTableç¬¬ä¸€ä¸ªå‚æ•°ç±»å‹ä¸å¯¹ã€‚
 #else
 RTL_GENERIC_TABLE g_LocalPortTable = {0};
 #endif
 
-KSPIN_LOCK  g_LocalPortSpinLock;//ÓÃÓÚ±£»¤ÉÏÃæÁ´±íµÄÍ¬²½£¬×¢Òâ£ºDPC¡£
+KSPIN_LOCK  g_LocalPortSpinLock;//ç”¨äºä¿æŠ¤ä¸Šé¢é“¾è¡¨çš„åŒæ­¥ï¼Œæ³¨æ„ï¼šDPCã€‚
 
 NPAGED_LOOKASIDE_LIST g_LocalPortLookaside;
 
@@ -20,7 +20,7 @@ RTL_GENERIC_COMPARE_RESULTS NTAPI CompareRoutine(__in struct _RTL_GENERIC_TABLE 
                                                  __in PVOID  SecondStruct
 )
 /*
-RtlInsertElementGenericTableµÄµÚÒ»´Îµ÷ÓÃ²»»á×ßÕâÀï£¬¿ÉÄÜ·¢ÏÖ±íÊÇ¿ÕµÄ¡£
+RtlInsertElementGenericTableçš„ç¬¬ä¸€æ¬¡è°ƒç”¨ä¸ä¼šèµ°è¿™é‡Œï¼Œå¯èƒ½å‘ç°è¡¨æ˜¯ç©ºçš„ã€‚
 */
 {
     PHIDE_LOCAL_PORT p1 = (PHIDE_LOCAL_PORT)FirstStruct;
@@ -40,7 +40,7 @@ RtlInsertElementGenericTableµÄµÚÒ»´Îµ÷ÓÃ²»»á×ßÕâÀï£¬¿ÉÄÜ·¢ÏÖ±íÊÇ¿ÕµÄ¡£
 
 PVOID NTAPI AllocateRoutine(__in struct _RTL_GENERIC_TABLE * Table, __in CLONG  ByteSize)
 /*
-µ÷ÓÃRtlInsertElementGenericTable»á×ßÕâÀï¡£
+è°ƒç”¨RtlInsertElementGenericTableä¼šèµ°è¿™é‡Œã€‚
 */
 {
     UNREFERENCED_PARAMETER(Table);
@@ -53,7 +53,7 @@ PVOID NTAPI AllocateRoutine(__in struct _RTL_GENERIC_TABLE * Table, __in CLONG  
 
 VOID NTAPI FreeRoutine(__in struct _RTL_GENERIC_TABLE * Table, __in PVOID  Buffer)
 /*
-µ÷ÓÃRtlDeleteElementGenericTable»á×ßÕâÀï¡£
+è°ƒç”¨RtlDeleteElementGenericTableä¼šèµ°è¿™é‡Œã€‚
 */
 {
     UNREFERENCED_PARAMETER(Table);
@@ -107,7 +107,7 @@ bool InsertElementGenericTable(WORD LocalPort)
 
 bool IsHideLocalPort(WORD LocalPort)
 /*
-¹¦ÄÜ£º²éÕÒÄ³¸öÔªËØµÄÆäËû³ÉÔ±µÄĞÅÏ¢¡£
+åŠŸèƒ½ï¼šæŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„å…¶ä»–æˆå‘˜çš„ä¿¡æ¯ã€‚
 */
 {
     KIRQL oldIrql;
@@ -128,7 +128,7 @@ bool IsHideLocalPort(WORD LocalPort)
 
 bool DeleteGenericTableElement(WORD LocalPort)
 /*
-ÓÃ·¨£º
+ç”¨æ³•ï¼š
 */
 {
     PVOID Temp = NULL;
@@ -141,7 +141,7 @@ bool DeleteGenericTableElement(WORD LocalPort)
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
     Temp = RtlLookupElementGenericTable(&g_LocalPortTable, &Element);
     if (Temp) {
-        RtlDeleteElementGenericTable(&g_LocalPortTable, Temp);//TempÔÚFreeRoutineÖĞÊÍ·ÅÁË¡£
+        RtlDeleteElementGenericTable(&g_LocalPortTable, Temp);//Tempåœ¨FreeRoutineä¸­é‡Šæ”¾äº†ã€‚
         B = TRUE;
     }
     KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
@@ -166,8 +166,8 @@ void EnumerateGenericTable()
 
 void DeleteGenericTable()
 /*
-¹¦ÄÜ£ºÉ¾³ıÕû¸ö±í¡£
-Õª×Ô£ºWindows 8 Driver Samples\AvScan File System Minifilter Driver\C++\filter\avscan.c
+åŠŸèƒ½ï¼šåˆ é™¤æ•´ä¸ªè¡¨ã€‚
+æ‘˜è‡ªï¼šWindows 8 Driver Samples\AvScan File System Minifilter Driver\C++\filter\avscan.c
 */
 {
     KIRQL oldIrql;
@@ -175,7 +175,7 @@ void DeleteGenericTable()
     KeAcquireSpinLock(&g_LocalPortSpinLock, &oldIrql);
     while (!RtlIsGenericTableEmpty(&g_LocalPortTable)) {
         PVOID Element = RtlGetElementGenericTable(&g_LocalPortTable, 0);
-        RtlDeleteElementGenericTable(&g_LocalPortTable, Element);//ElementÔÚFreeRoutineÖĞÊÍ·ÅÁË¡£
+        RtlDeleteElementGenericTable(&g_LocalPortTable, Element);//Elementåœ¨FreeRoutineä¸­é‡Šæ”¾äº†ã€‚
     }
     KeReleaseSpinLock(&g_LocalPortSpinLock, oldIrql);
 

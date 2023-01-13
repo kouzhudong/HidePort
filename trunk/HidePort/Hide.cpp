@@ -1,7 +1,7 @@
 #include "Hide.h"
 #include "Rules.h"
 
-bool g_IsHide;//Òþ²ØµÄ×Ü¿ª¹Ø¡£
+bool g_IsHide;//éšè—çš„æ€»å¼€å…³ã€‚
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -9,9 +9,9 @@ bool g_IsHide;//Òþ²ØµÄ×Ü¿ª¹Ø¡£
 
 bool IsHideUdp(_In_ PUdpTable Entry)
 /*
-¹¦ÄÜ£ºÊ¶±ðÊÇ²»ÊÇÒªÒþ²ØµÄÐÅÏ¢¡£
+åŠŸèƒ½ï¼šè¯†åˆ«æ˜¯ä¸æ˜¯è¦éšè—çš„ä¿¡æ¯ã€‚
 
-ºóÆÚ»¹¿ÉÒÔ¿¼ÂÇ¼Ó²ÎÊý£¬Èç£º½ø³ÌµÈ¡£
+åŽæœŸè¿˜å¯ä»¥è€ƒè™‘åŠ å‚æ•°ï¼Œå¦‚ï¼šè¿›ç¨‹ç­‰ã€‚
 */
 {
     bool ret = false;
@@ -26,9 +26,9 @@ bool IsHideUdp(_In_ PUdpTable Entry)
 
 bool IsHideTcp(_In_ PTcpTable Entry)
 /*
-¹¦ÄÜ£ºÊ¶±ðÊÇ²»ÊÇÒªÒþ²ØµÄÐÅÏ¢¡£
+åŠŸèƒ½ï¼šè¯†åˆ«æ˜¯ä¸æ˜¯è¦éšè—çš„ä¿¡æ¯ã€‚
 
-ºóÆÚ»¹¿ÉÒÔ¿¼ÂÇ¼Ó²ÎÊý£¬Èç£º½ø³ÌµÈ¡£
+åŽæœŸè¿˜å¯ä»¥è€ƒè™‘åŠ å‚æ•°ï¼Œå¦‚ï¼šè¿›ç¨‹ç­‰ã€‚
 */
 {
     bool ret = false;
@@ -38,8 +38,8 @@ bool IsHideTcp(_In_ PTcpTable Entry)
     }
 
     /*
-    »¹¿ÉÒÔ¼ÌÐøÌí¼Ó±ðµÄ£¬Èç£ºIPv4/6.
-    ¹ØÏµÊÇºÍ¡£
+    è¿˜å¯ä»¥ç»§ç»­æ·»åŠ åˆ«çš„ï¼Œå¦‚ï¼šIPv4/6.
+    å…³ç³»æ˜¯å’Œã€‚
     */
 
     return ret;
@@ -48,13 +48,13 @@ bool IsHideTcp(_In_ PTcpTable Entry)
 
 void HideUdpInfo(_In_ PNsiParameters NsiParam)
 /*
-¹¦ÄÜ£ºÒþ²ØUDPÍøÂçÐÅÏ¢£¬Èç£º±¾µØ¶Ë¿Ú¡£
+åŠŸèƒ½ï¼šéšè—UDPç½‘ç»œä¿¡æ¯ï¼Œå¦‚ï¼šæœ¬åœ°ç«¯å£ã€‚
 
-¸ß¼¶×ö·¨£ºÒþ²ØÄ³¸ö½ø³ÌµÄËùÓÐµÄÍøÂçµÄÍ¨Ñ¶ÐÅÏ¢¡£
+é«˜çº§åšæ³•ï¼šéšè—æŸä¸ªè¿›ç¨‹çš„æ‰€æœ‰çš„ç½‘ç»œçš„é€šè®¯ä¿¡æ¯ã€‚
 
-×ö·¨£º
-ÒÆ³ýp1,p2,StateInfo,p4ÀïµÄÏàÓ¦µÄ½ÚµãÔªËØÐÅÏ¢¼´¿É¡£
-×îºó²»ÒªÍüÁË£¬¼õÉÙCounter³ÉÔ±µÄÖµ¡£
+åšæ³•ï¼š
+ç§»é™¤p1,p2,StateInfo,p4é‡Œçš„ç›¸åº”çš„èŠ‚ç‚¹å…ƒç´ ä¿¡æ¯å³å¯ã€‚
+æœ€åŽä¸è¦å¿˜äº†ï¼Œå‡å°‘Counteræˆå‘˜çš„å€¼ã€‚
 */
 {
     if (nullptr == NsiParam) {
@@ -76,7 +76,7 @@ void HideUdpInfo(_In_ PNsiParameters NsiParam)
         if (NsiParam->p1) {
             IsHide = IsHideUdp(Table);
             if (IsHide) {
-                //ÒÆ¶¯Õâ¸öÔªËØºóÃæµÄÊý¾Ýµ½Õâ¸öÔªËØµÄÎ»ÖÃ¡£
+                //ç§»åŠ¨è¿™ä¸ªå…ƒç´ åŽé¢çš„æ•°æ®åˆ°è¿™ä¸ªå…ƒç´ çš„ä½ç½®ã€‚
                 memmove(Table, Table + 1, NsiParam->size1 * (NsiParam->Counter - i));
                 NsiParam->Counter--;
             }
@@ -85,8 +85,8 @@ void HideUdpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->p2) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(p2, p2 + NsiParam->size2, NsiParam->size2 * (NsiParam->Counter - i));
@@ -96,8 +96,8 @@ void HideUdpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->StateInfo) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(State, State + 1, NsiParam->size3 * (NsiParam->Counter - i));
@@ -107,8 +107,8 @@ void HideUdpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->ProcessInfo) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(Module, Module + 1, NsiParam->size4 * (NsiParam->Counter - i));
@@ -118,22 +118,22 @@ void HideUdpInfo(_In_ PNsiParameters NsiParam)
         }
     }
 
-    //¸üÐÂCounterµÄÖµ¡£Èç¹ûÒÑ¾­¸üÐÂ£¬ÕâÀïºöÂÔ¡£
-    //NsiParam->Counter = XXX¡£
+    //æ›´æ–°Counterçš„å€¼ã€‚å¦‚æžœå·²ç»æ›´æ–°ï¼Œè¿™é‡Œå¿½ç•¥ã€‚
+    //NsiParam->Counter = XXXã€‚
 }
 
 
 void HideTcpInfo(_In_ PNsiParameters NsiParam)
 /*
-¹¦ÄÜ£ºÒþ²ØTcpÍøÂçÐÅÏ¢£¬Èç£º±¾µØ¶Ë¿Ú£¬Ô¶¶ËIP(v4/6)¡£
+åŠŸèƒ½ï¼šéšè—Tcpç½‘ç»œä¿¡æ¯ï¼Œå¦‚ï¼šæœ¬åœ°ç«¯å£ï¼Œè¿œç«¯IP(v4/6)ã€‚
 
-¸ß¼¶×ö·¨£ºÒþ²ØÄ³¸ö½ø³ÌµÄËùÓÐµÄÍøÂçµÄÍ¨Ñ¶ÐÅÏ¢¡£
+é«˜çº§åšæ³•ï¼šéšè—æŸä¸ªè¿›ç¨‹çš„æ‰€æœ‰çš„ç½‘ç»œçš„é€šè®¯ä¿¡æ¯ã€‚
 
-×ö·¨£º
-ÒÆ³ýp1,p2,StateInfo,p4ÀïµÄÏàÓ¦µÄ½ÚµãÔªËØÐÅÏ¢¼´¿É¡£
-×îºó²»ÒªÍüÁË£¬¼õÉÙCounter³ÉÔ±µÄÖµ¡£
+åšæ³•ï¼š
+ç§»é™¤p1,p2,StateInfo,p4é‡Œçš„ç›¸åº”çš„èŠ‚ç‚¹å…ƒç´ ä¿¡æ¯å³å¯ã€‚
+æœ€åŽä¸è¦å¿˜äº†ï¼Œå‡å°‘Counteræˆå‘˜çš„å€¼ã€‚
 
-¿ÉÒÔ¿¼ÂÇ£º°ÑHideTcpInfoºÍHideUdpInfoºÏ²¢ÎªÄ£°å¡£
+å¯ä»¥è€ƒè™‘ï¼šæŠŠHideTcpInfoå’ŒHideUdpInfoåˆå¹¶ä¸ºæ¨¡æ¿ã€‚
 */
 {
     if (nullptr == NsiParam) {
@@ -155,7 +155,7 @@ void HideTcpInfo(_In_ PNsiParameters NsiParam)
         if (NsiParam->p1) {
             IsHide = IsHideTcp(Table);
             if (IsHide) {
-                //ÒÆ¶¯Õâ¸öÔªËØºóÃæµÄÊý¾Ýµ½Õâ¸öÔªËØµÄÎ»ÖÃ¡£
+                //ç§»åŠ¨è¿™ä¸ªå…ƒç´ åŽé¢çš„æ•°æ®åˆ°è¿™ä¸ªå…ƒç´ çš„ä½ç½®ã€‚
                 memmove(Table, Table + 1, NsiParam->size1 * (NsiParam->Counter - i));
                 NsiParam->Counter--;
             }
@@ -164,8 +164,8 @@ void HideTcpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->p2) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(p2, p2 + NsiParam->size2, NsiParam->size2 * (NsiParam->Counter - i));
@@ -175,8 +175,8 @@ void HideTcpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->StateInfo) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(State, State + 1, NsiParam->size3 * (NsiParam->Counter - i));
@@ -186,8 +186,8 @@ void HideTcpInfo(_In_ PNsiParameters NsiParam)
         }
 
         if (NsiParam->ProcessInfo) {
-            //Èç¹ûÉÏÃæµÄÆ¥ÅäÁË£¬ÕâÀïÒ²Ó¦ÒÆ³ýÏÂ¡£
-            //ÕâÀïÒ²¿ÉÒÔÆ¥ÅäÏÂ¡£
+            //å¦‚æžœä¸Šé¢çš„åŒ¹é…äº†ï¼Œè¿™é‡Œä¹Ÿåº”ç§»é™¤ä¸‹ã€‚
+            //è¿™é‡Œä¹Ÿå¯ä»¥åŒ¹é…ä¸‹ã€‚
 
             if (IsHide) {
                 memmove(Module, Module + 1, NsiParam->size4 * (NsiParam->Counter - i));
@@ -197,6 +197,6 @@ void HideTcpInfo(_In_ PNsiParameters NsiParam)
         }
     }
 
-    //¸üÐÂCounterµÄÖµ¡£Èç¹ûÒÑ¾­¸üÐÂ£¬ÕâÀïºöÂÔ¡£
-    //NsiParam->Counter = XXX¡£
+    //æ›´æ–°Counterçš„å€¼ã€‚å¦‚æžœå·²ç»æ›´æ–°ï¼Œè¿™é‡Œå¿½ç•¥ã€‚
+    //NsiParam->Counter = XXXã€‚
 }

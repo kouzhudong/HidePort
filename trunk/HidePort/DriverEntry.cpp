@@ -24,7 +24,7 @@ VOID DriverUnload(_In_ struct _DRIVER_OBJECT * DriverObject)
 
     DeleteGenericTable();
 
-    Sleep(3000);//µÈ´ıÒ»Ğ©¹ÒÆğ×´Ì¬µÄIRP¡£×¢Òâ£º²»ÊÇÈ«²¿¡£
+    Sleep(3000);//ç­‰å¾…ä¸€äº›æŒ‚èµ·çŠ¶æ€çš„IRPã€‚æ³¨æ„ï¼šä¸æ˜¯å…¨éƒ¨ã€‚
 }
 
 
