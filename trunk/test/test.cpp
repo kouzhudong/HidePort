@@ -46,7 +46,11 @@ int _cdecl wmain(_In_ int argc, _In_reads_(argc) TCHAR * argv[])
 {
     int ret = ERROR_SUCCESS;
 
-    DebugBreak();
+#ifdef _DEBUG
+    if (IsDebuggerPresent()) {
+        DebugBreak();
+    }
+#endif
 
     setlocale(LC_CTYPE, ".936");
 
